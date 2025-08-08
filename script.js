@@ -143,6 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
             questions = allDecks[selectedDeck];
         }
         availableQuestions = [...questions];
+
+        // Shuffle the questions to ensure variety
+        for (let i = availableQuestions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [availableQuestions[i], availableQuestions[j]] = [availableQuestions[j], availableQuestions[i]];
+        }
+
+        if (availableQuestions.length > 75) {
+            availableQuestions = availableQuestions.slice(0, 75);
+        }
+
         switchScreen('game');
         nextQuestion();
     }
