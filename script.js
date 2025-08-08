@@ -185,10 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (db) {
             try {
                 const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
-                const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(10).get();
-                const lowestScoreOnLeaderboard = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1].data().score : 0;
+                const snapshot = await leaderboardRef.get();
 
-                if (currentScore > 0 && (snapshot.docs.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
+                const scores = [];
+                snapshot.forEach(doc => {
+                    scores.push(doc.data());
+                });
+                scores.sort((a, b) => b.score - a.score);
+
+                const topScores = scores.slice(0, 10);
+
+                const lowestScoreOnLeaderboard = topScores.length > 0 ? topScores[topScores.length - 1].score : 0;
+
+                if (currentScore > 0 && (topScores.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
                     highscoreInputContainer.style.display = 'block';
                 } else {
                     highscoreInputContainer.style.display = 'none';
@@ -359,17 +368,26 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Use selectedDeck to query the specific leaderboard
             const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
-            const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(20).get();
+            const snapshot = await leaderboardRef.get();
 
             if (snapshot.empty) {
                 leaderboardList.innerHTML = `<li>Be the first to set a score for the ${getDeckName(selectedDeck)} deck!</li>`;
                 return;
             }
+            const scores = [];
+            snapshot.forEach(doc => {
+                scores.push(doc.data());
+            });
+
+            // Sort client-side
+            scores.sort((a, b) => b.score - a.score);
+
+            // Limit client-side
+            const topScores = scores.slice(0, 20);
 
             leaderboardList.innerHTML = ''; // Clear loading message
             let rank = 1;
-            snapshot.forEach(doc => {
-                const data = doc.data();
+            topScores.forEach(data => {
                 const li = document.createElement('li');
                 li.innerHTML = `<span>${rank}. ${data.name}</span><span>${data.score}</span>`;
                 leaderboardList.appendChild(li);
