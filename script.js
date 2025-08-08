@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gradedTitleDisplay = document.getElementById('graded-title');
     const gameContainer = document.getElementById('game-container');
     const card = document.getElementById('card');
+    const answerPopup = document.getElementById('answer-popup');
     
     // NEW: Timer elements
     const timerBar = document.getElementById('timer-bar');
@@ -87,6 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function nextQuestion() {
         clearTimeout(questionTimer); // NEW: Clear any previous timer
 
+        // Ensure buttons are enabled for the new question
+        higherButton.disabled = false;
+        lowerButton.disabled = false;
+
         if (availableQuestions.length === 0) {
             endGame("You answered all the questions!");
             return;
@@ -120,24 +125,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Answer Logic ---
     function checkAnswer(guess) {
-        clearTimeout(questionTimer); // NEW: Stop the timer as soon as an answer is given
-        
-        let displayedNumberText = presentedValue.textContent.replace('R', '');
+        clearTimeout(questionTimer); // Stop the timer as soon as an answer is given
+
+        let displayedNumberText = presentedValue.textContent.replace('R', '').replace(/,/g, '');
         const displayedNumber = parseFloat(displayedNumberText);
         const actualValue = currentQuestion.value;
-        
+
         let isCorrect = (guess === 'higher' && actualValue > displayedNumber) || (guess === 'lower' && actualValue < displayedNumber);
+
+        // Disable buttons immediately after a guess
+        higherButton.disabled = true;
+        lowerButton.disabled = true;
 
         if (isCorrect) {
             currentScore++;
             updateScoreDisplay();
-            // Add a slight delay for satisfaction before the next question
-            setTimeout(nextQuestion, 300);
+
+            // Show the correct answer pop-up
+            answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
+            answerPopup.classList.add('show');
+
+            // Wait, then hide popup and load next question
+            setTimeout(() => {
+                answerPopup.classList.remove('show');
+                // Buttons are re-enabled in nextQuestion()
+                nextQuestion();
+            }, 1500); // 1.5 second delay
+
         } else {
+            // Vibrate and play sound on wrong answer
             gameContainer.classList.add('wrong-answer');
+            playWrongAnswerSound();
+
             setTimeout(() => {
                 gameContainer.classList.remove('wrong-answer');
-                endGame();
+                // Pass the correct reason for ending the game
+                endGame(`Eish, you got it wrong!`);
             }, 500);
         }
     }
@@ -195,16 +218,59 @@ document.addEventListener('DOMContentLoaded', () => {
         else taxiSound.play();
     }
 
+    function updateOgTags(score, title) {
+        const ogTitle = `I scored ${score} on The Mzansi Meter!`;
+        const ogDescription = `They call me "${title}". Think you can do better, boet?`;
+        // Construct the full URL for the image generation API
+        const imageUrl = `${window.location.origin}/api/generate-image?score=${score}&title=${encodeURIComponent(title)}`;
+
+        // Define the meta tags to update or create
+        const metas = {
+            'og:title': ogTitle,
+            'og:description': ogDescription,
+            'og:image': imageUrl,
+            'twitter:card': 'summary_large_image',
+            'twitter:title': ogTitle,
+            'twitter:description': ogDescription,
+            'twitter:image': imageUrl,
+        };
+
+        // Loop through the defined meta tags
+        for (const [property, content] of Object.entries(metas)) {
+            let meta = document.querySelector(`meta[property='${property}']`);
+            // If a meta tag doesn't exist, create it
+            if (!meta) {
+                meta = document.createElement('meta');
+                meta.setAttribute('property', property);
+                document.head.appendChild(meta);
+            }
+            // Set the content of the meta tag
+            meta.setAttribute('content', content);
+        }
+    }
+
     async function shareScore() {
-        const title = getGradedTitle(currentScore);
-        const text = `My Mzansi Meter Score: ${currentScore}!\nThey call me a "${title}". Eish!\n\nThink you can do better, boet? #MzansiMeter 🇿🇦`;
+        const score = currentScore;
+        const title = getGradedTitle(score);
+
+        // Dynamically update the page's OG tags
+        updateOgTags(score, title);
+
+        const shareText = `I scored ${score} on The Mzansi Meter and they call me "${title}"! Think you can do better, boet? #MzansiMeter 🇿🇦`;
 
         if (navigator.share) {
             try {
-                await navigator.share({ title: 'The Mzansi Meter', text: text, url: window.location.href });
-            } catch (error) { console.error('Error sharing:', error); copyToClipboard(text); }
+                await navigator.share({
+                    title: 'The Mzansi Meter',
+                    text: shareText,
+                    url: window.location.href // This URL now contains the rich OG tags
+                });
+            } catch (error) {
+                console.error('Error sharing:', error);
+                copyToClipboard(shareText); // Fallback to clipboard
+            }
         } else {
-            copyToClipboard(text);
+            copyToClipboard(shareText); // Fallback for browsers that don't support navigator.share
         }
     }
 
