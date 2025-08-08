@@ -151,6 +151,35 @@ body {
 }
 
 
+/* --- Correct Answer Popup --- */
+#answer-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 122, 77, 0.95); /* primary-color with transparency */
+    color: var(--light-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 15px; /* Same as card */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 10;
+    pointer-events: none; /* Don't block clicks when hidden */
+}
+
+#answer-popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* --- General Button Styles --- */
 .action-button { width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 700; border-radius: 12px; border: none; cursor: pointer; background-color: var(--primary-color); color: var(--light-color); transition: background-color 0.2s ease; margin-bottom: 10px; }
 .action-button:hover { background-color: #005a3a; }
