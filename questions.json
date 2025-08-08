@@ -19,7 +19,7 @@
         "question": "Price of this iconic South African meal, the Gatsby",
         "value": 150,
         "format": "currency",
-        "image": "https://images.prismic.io/eatapp/ZDYwY2YxM2ItZDU4NS00ZTI5LWI3ZjctOGZlMDRlZWIzMWRl_gatsby-jpeg.jpg?auto=compress,format"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Gatsby_(1).jpg/330px-Gatsby_(1).jpg"
     },
     {
         "question": "Number of times the Springboks have won the Rugby World Cup",
@@ -35,7 +35,7 @@
         "question": "The year this classic album, 'Weekend Special' by Brenda Fassie, was released",
         "value": 1983,
         "format": "number",
-        "image": "https://i.scdn.co/image/ab67616d0000b2734623725ed3eb01643c71bb04"
+        "image": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cb/Weekend_Special.jpg/250px-Weekend_Special.jpg"
     },
     {
         "question": "The N1 highway's total length in kilometres",
