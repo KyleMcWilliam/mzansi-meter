@@ -3,8 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('start-screen');
     const gameScreen = document.getElementById('game-screen');
     const endScreen = document.getElementById('end-screen');
+    const leaderboardScreen = document.getElementById('leaderboard-screen');
+    const settingsModal = document.getElementById('settings-modal');
 
     const startButton = document.getElementById('start-button');
+    const leaderboardButton = document.getElementById('leaderboard-button');
+    const backToStartButton = document.getElementById('back-to-start-button');
     const restartButton = document.getElementById('restart-button');
     const shareButton = document.getElementById('share-button');
     const higherButton = document.getElementById('higher-button');
@@ -27,6 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // NEW: Timer elements
     const timerBar = document.getElementById('timer-bar');
 
+    // Settings Modal elements
+    const settingsIcon = document.getElementById('settings-icon');
+    const closeButton = document.querySelector('.close-button');
+    const deckSelect = document.getElementById('deck-select');
+
+    // Leaderboard elements
+    const leaderboardList = document.getElementById('leaderboard-list');
+    const highscoreInputContainer = document.getElementById('highscore-input-container');
+    const playerInitials = document.getElementById('player-initials');
+    const submitScoreButton = document.getElementById('submit-score-button');
+
     // NEW: Answer reveal elements
     const revealQuestionText = document.getElementById('reveal-question-text');
     const revealCorrectAnswer = document.getElementById('reveal-correct-answer');
@@ -42,17 +57,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Game State ---
     let currentScore = 0;
     let highScore = localStorage.getItem('mzansiMeterHighScore') || 0;
+    let allDecks = {};
     let questions = [];
     let availableQuestions = [];
     let currentQuestion = {};
+    let selectedDeck = localStorage.getItem('mzansiSelectedDeck') || 'default';
     const QUESTION_TIME = 10000; // 10 seconds in milliseconds
     let questionTimer; // NEW: Timer variable
+    let db; // Firebase Firestore instance
+
+    // --- Firebase SDK ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyAj6VSGZxEZhK1cxlwLl6dkOlWN2MwWpqE",
+        authDomain: "mzanzi-meter.firebaseapp.com",
+        projectId: "mzanzi-meter",
+        storageBucket: "mzanzi-meter.firebasestorage.app",
+        messagingSenderId: "133492065727",
+        appId: "1:133492065727:web:98817a2a3e7e3426734d0a",
+        measurementId: "G-HS5RX6953L"
+    };
+
+    // Initialize Firebase
+    try {
+        const app = firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+    } catch (e) {
+        console.error("Firebase initialization failed:", e);
+        alert("Could not connect to the leaderboard. Please check the console for details.");
+    }
+
 
     // --- Fetch and Initialize ---
     fetch('questions.json')
         .then(response => response.json())
         .then(data => {
-            questions = data;
+            allDecks = data;
+            questions = allDecks[selectedDeck];
+            deckSelect.value = selectedDeck;
             init();
         });
 
@@ -64,18 +105,49 @@ document.addEventListener('DOMContentLoaded', () => {
         higherButton.addEventListener('click', () => checkAnswer('higher'));
         lowerButton.addEventListener('click', () => checkAnswer('lower'));
         shareButton.addEventListener('click', shareScore);
+
+        // New Listeners
+        settingsIcon.addEventListener('click', () => {
+            console.log("Settings icon clicked!");
+            settingsModal.classList.add('is-active');
+        });
+        closeButton.addEventListener('click', () => settingsModal.classList.remove('is-active'));
+        window.addEventListener('click', (event) => {
+            if (event.target == settingsModal) {
+                settingsModal.classList.remove('is-active');
+            }
+        });
+        deckSelect.addEventListener('change', handleDeckChange);
+        leaderboardButton.addEventListener('click', showLeaderboard);
+        backToStartButton.addEventListener('click', () => switchScreen('start'));
+        submitScoreButton.addEventListener('click', submitScore);
     }
 
     // --- Game Flow ---
+    function handleDeckChange(e) {
+        selectedDeck = e.target.value;
+        localStorage.setItem('mzansiSelectedDeck', selectedDeck);
+        questions = allDecks[selectedDeck];
+        settingsModal.style.display = 'none'; // Close modal on selection
+    }
+
     function startGame() {
         currentScore = 0;
         updateScoreDisplay();
-        availableQuestions = [...questions]; 
+        // Ensure the correct question set is loaded
+        questions = allDecks[selectedDeck];
+        if (!questions || questions.length === 0) {
+            alert('Error: Selected deck is empty or not found. Reverting to default.');
+            selectedDeck = 'default';
+            localStorage.setItem('mzansiSelectedDeck', selectedDeck);
+            questions = allDecks[selectedDeck];
+        }
+        availableQuestions = [...questions];
         switchScreen('game');
         nextQuestion();
     }
 
-    function endGame(reason = "Wrong answer!") {
+    async function endGame(reason = "Wrong answer!") {
         clearTimeout(questionTimer); // NEW: Stop the timer
         
         // NEW: Populate and show the correct answer
@@ -88,6 +160,24 @@ document.addEventListener('DOMContentLoaded', () => {
         gradedTitleDisplay.textContent = getGradedTitle(currentScore);
         playWrongAnswerSound();
         switchScreen('end');
+
+        // Leaderboard check
+        if (db) {
+            try {
+                const leaderboardRef = db.collection('leaderboard');
+                const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(10).get();
+                const lowestScoreOnLeaderboard = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1].data().score : 0;
+
+                if (currentScore > 0 && (snapshot.docs.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
+                    highscoreInputContainer.style.display = 'block';
+                } else {
+                    highscoreInputContainer.style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Error checking leaderboard:", error);
+                highscoreInputContainer.style.display = 'none';
+            }
+        }
     }
 
     function nextQuestion() {
@@ -216,6 +306,68 @@ document.addEventListener('DOMContentLoaded', () => {
             highScore = currentScore;
             localStorage.setItem('mzansiMeterHighScore', highScore);
             highScoreStartDisplay.textContent = highScore;
+        }
+    }
+
+    async function showLeaderboard() {
+        switchScreen('leaderboard');
+        leaderboardList.innerHTML = '<li>Loading...</li>';
+
+        if (!db) {
+            leaderboardList.innerHTML = '<li>Error: Leaderboard is not available.</li>';
+            return;
+        }
+
+        try {
+            const leaderboardRef = db.collection('leaderboard');
+            const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(20).get();
+
+            if (snapshot.empty) {
+                leaderboardList.innerHTML = '<li>The leaderboard is empty! Be the first to set a score.</li>';
+                return;
+            }
+
+            leaderboardList.innerHTML = ''; // Clear loading message
+            let rank = 1;
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${rank}. ${data.name}</span><span>${data.score}</span>`;
+                leaderboardList.appendChild(li);
+                rank++;
+            });
+        } catch (error) {
+            console.error("Error fetching leaderboard:", error);
+            leaderboardList.innerHTML = '<li>Could not load leaderboard. Please try again later.</li>';
+        }
+    }
+
+    async function submitScore() {
+        const name = playerInitials.value.trim().toUpperCase();
+        if (!name || name.length < 3) {
+            alert("Please enter your 3 initials.");
+            return;
+        }
+
+        submitScoreButton.disabled = true;
+        submitScoreButton.textContent = 'Submitting...';
+
+        const scoreData = {
+            name: name,
+            score: currentScore,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            if (!db) throw new Error("Firestore is not initialized.");
+            await db.collection('leaderboard').add(scoreData);
+            highscoreInputContainer.innerHTML = '<p>Your score has been submitted!</p>';
+            setTimeout(showLeaderboard, 1500); // Show updated leaderboard after a delay
+        } catch (error) {
+            console.error("Error submitting score:", error);
+            alert("There was an error submitting your score. Please try again.");
+            submitScoreButton.disabled = false;
+            submitScoreButton.textContent = 'Submit';
         }
     }
     

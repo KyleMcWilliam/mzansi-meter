@@ -1,4 +1,5 @@
-[
+{
+  "default": [
     {
         "question": "Price of a 2-litre Stoney Ginger Beer at a major retailer",
         "value": 24.50,
@@ -76,4 +77,15 @@
         "value": 1990,
         "format": "number"
     }
-]
+  ],
+  "90sNostalgia": [
+    { "question": "Price of a 500ml Tab soda in 1995", "value": 2.50, "format": "currency" },
+    { "question": "The year M-Net launched 'K-T.V.'", "value": 1990, "format": "number" },
+    { "question": "Cost of a ticket to see 'Jurassic Park' in 1993", "value": 15.00, "format": "currency" }
+  ],
+  "rugbyStats": [
+    { "question": "Metres gained by Cheslin Kolbe in RWC 2019 Final", "value": 85, "format": "number" },
+    { "question": "Number of drop goals kicked by Jannie de Beer in the 1999 RWC Quarter-Final", "value": 5, "format": "number" },
+    { "question": "The year the Currie Cup competition was first played", "value": 1892, "format": "number" }
+  ]
+}

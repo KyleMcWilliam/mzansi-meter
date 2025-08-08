@@ -17,6 +17,8 @@
             </div>
             <div class="high-score-display">High Score: <span id="high-score-start">0</span></div>
             <button id="start-button" class="action-button">Start Game</button>
+            <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
+            <div id="settings-icon">⚙️</div>
             <div class="footer-note">🇿🇦 How lekker is your local knowledge? 🇿🇦</div>
         </div>
 
@@ -71,7 +73,34 @@
             </div>
             <button id="share-button" class="action-button">Share Your Score</button>
             <button id="restart-button" class="action-button secondary">Play Again</button>
+             <!-- NEW: High Score Input -->
+            <div id="highscore-input-container" style="display: none;">
+                <p>Congrats! You're on the leaderboard!</p>
+                <input type="text" id="player-initials" placeholder="Enter Your 3 Initials" maxlength="3">
+                <button id="submit-score-button" class="action-button">Submit</button>
+            </div>
         </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Select a Deck</h2>
+                <select id="deck-select">
+                    <option value="default">Default</option>
+                    <option value="90sNostalgia">90s Nostalgia</option>
+                    <option value="rugbyStats">Rugby Stats</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard-screen" class="screen">
+            <h2>Global Leaderboard</h2>
+            <ol id="leaderboard-list"></ol>
+            <button id="back-to-start-button" class="action-button">Back</button>
+        </div>
+
     </div>
 
     <!-- Audio Files -->
@@ -80,7 +109,11 @@
 
     <canvas id="confetti-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="questions.json"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>
