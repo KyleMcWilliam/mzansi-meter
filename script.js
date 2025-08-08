@@ -184,26 +184,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Leaderboard check
         if (db) {
             try {
-                const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
+                // Fetch the top 10 scores for the selected deck
+                const leaderboardRef = db.collection('leaderboard')
+                                           .where('deck', '==', selectedDeck)
+                                           .orderBy('score', 'desc')
+                                           .limit(10);
                 const snapshot = await leaderboardRef.get();
 
                 const scores = [];
                 snapshot.forEach(doc => {
-                    scores.push(doc.data());
+                    scores.push(doc.data().score);
                 });
-                scores.sort((a, b) => b.score - a.score);
 
-                const topScores = scores.slice(0, 10);
+                const lowestScoreOnLeaderboard = scores.length > 0 ? scores[scores.length - 1] : 0;
 
-                const lowestScoreOnLeaderboard = topScores.length > 0 ? topScores[topScores.length - 1].score : 0;
-
-                if (currentScore > 0 && (topScores.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
+                // Show input if the user's score is high enough
+                if (currentScore > 0 && (scores.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
                     highscoreInputContainer.style.display = 'block';
                 } else {
                     highscoreInputContainer.style.display = 'none';
                 }
             } catch (error) {
-                console.error("Error checking leaderboard:", error);
+                console.error("Error checking leaderboard eligibility:", error);
+                // Hide the input container on error to prevent issues
                 highscoreInputContainer.style.display = 'none';
             }
         }
@@ -366,28 +369,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Use selectedDeck to query the specific leaderboard
-            const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
+            // Use selectedDeck to query the specific leaderboard, ordering by score
+            const leaderboardRef = db.collection('leaderboard')
+                                       .where('deck', '==', selectedDeck)
+                                       .orderBy('score', 'desc')
+                                       .limit(20);
             const snapshot = await leaderboardRef.get();
 
             if (snapshot.empty) {
                 leaderboardList.innerHTML = `<li>Be the first to set a score for the ${getDeckName(selectedDeck)} deck!</li>`;
                 return;
             }
-            const scores = [];
-            snapshot.forEach(doc => {
-                scores.push(doc.data());
-            });
-
-            // Sort client-side
-            scores.sort((a, b) => b.score - a.score);
-
-            // Limit client-side
-            const topScores = scores.slice(0, 20);
 
             leaderboardList.innerHTML = ''; // Clear loading message
             let rank = 1;
-            topScores.forEach(data => {
+            snapshot.forEach(doc => {
+                const data = doc.data();
                 const li = document.createElement('li');
                 li.innerHTML = `<span>${rank}. ${data.name}</span><span>${data.score}</span>`;
                 leaderboardList.appendChild(li);
@@ -395,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
-            leaderboardList.innerHTML = '<li>Could not load leaderboard. Please try again later.</li>';
+            leaderboardList.innerHTML = '<li>Could not load leaderboard. This might be a temporary issue. Please try again later.</li>';
         }
     }
 
