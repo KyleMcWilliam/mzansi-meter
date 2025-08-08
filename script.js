@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameScreen = document.getElementById('game-screen');
     const endScreen = document.getElementById('end-screen');
     const leaderboardScreen = document.getElementById('leaderboard-screen');
-    const settingsModal = document.getElementById('settings-modal');
 
     const startButton = document.getElementById('start-button');
     const leaderboardButton = document.getElementById('leaderboard-button');
@@ -32,11 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // NEW: Timer elements
     const timerBar = document.getElementById('timer-bar');
 
-    // Settings Modal elements
-    const settingsIcon = document.getElementById('settings-icon');
-    const closeButton = document.querySelector('.close-button');
-    const deckSelect = document.getElementById('deck-select');
-
     // Leaderboard elements
     const leaderboardTitle = document.getElementById('leaderboard-title');
     const leaderboardList = document.getElementById('leaderboard-list');
@@ -59,11 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Game State ---
     let currentScore = 0;
     let highScore = localStorage.getItem('mzansiMeterHighScore') || 0;
-    let allDecks = {};
     let questions = [];
     let availableQuestions = [];
     let currentQuestion = {};
-    let selectedDeck = localStorage.getItem('mzansiSelectedDeck') || 'default';
     const QUESTION_TIME = 10000; // 10 seconds in milliseconds
     let questionTimer; // NEW: Timer variable
     let db; // Firebase Firestore instance
@@ -94,9 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('questions.json')
         .then(response => response.json())
         .then(data => {
-            allDecks = data;
-            questions = allDecks[selectedDeck];
-            deckSelect.value = selectedDeck;
+            questions = data;
             init();
         });
 
@@ -110,17 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
         shareButton.addEventListener('click', shareScore);
 
         // New Listeners
-        settingsIcon.addEventListener('click', () => {
-            console.log("Settings icon clicked!");
-            settingsModal.classList.add('is-active');
-        });
-        closeButton.addEventListener('click', () => settingsModal.classList.remove('is-active'));
-        window.addEventListener('click', (event) => {
-            if (event.target == settingsModal) {
-                settingsModal.classList.remove('is-active');
-            }
-        });
-        deckSelect.addEventListener('change', handleDeckChange);
         leaderboardButton.addEventListener('click', () => showLeaderboard('start'));
         gameLeaderboardButton.addEventListener('click', () => showLeaderboard('game'));
         backToStartButton.addEventListener('click', () => {
@@ -133,23 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Game Flow ---
-    function handleDeckChange(e) {
-        selectedDeck = e.target.value;
-        localStorage.setItem('mzansiSelectedDeck', selectedDeck);
-        questions = allDecks[selectedDeck];
-        settingsModal.style.display = 'none'; // Close modal on selection
-    }
-
     function startGame() {
         currentScore = 0;
         updateScoreDisplay();
         // Ensure the correct question set is loaded
-        questions = allDecks[selectedDeck];
         if (!questions || questions.length === 0) {
-            alert('Error: Selected deck is empty or not found. Reverting to default.');
-            selectedDeck = 'default';
-            localStorage.setItem('mzansiSelectedDeck', selectedDeck);
-            questions = allDecks[selectedDeck];
+            alert('Error: Questions not loaded. Please refresh the page.');
+            return;
         }
         availableQuestions = [...questions];
 
@@ -186,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // Fetch the top 10 scores for the selected deck
                 const leaderboardRef = db.collection('leaderboard')
-                                           .where('deck', '==', selectedDeck)
                                            .orderBy('score', 'desc')
                                            .limit(10);
                 const snapshot = await leaderboardRef.get();
@@ -360,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(questionTimer);
         }
         switchScreen('leaderboard');
-        leaderboardTitle.textContent = `${getDeckName(selectedDeck)} Leaderboard`;
+        leaderboardTitle.textContent = `Global Leaderboard`;
         leaderboardList.innerHTML = '<li>Loading...</li>';
 
         if (!db) {
@@ -371,13 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Use selectedDeck to query the specific leaderboard, ordering by score
             const leaderboardRef = db.collection('leaderboard')
-                                       .where('deck', '==', selectedDeck)
                                        .orderBy('score', 'desc')
                                        .limit(20);
             const snapshot = await leaderboardRef.get();
 
             if (snapshot.empty) {
-                leaderboardList.innerHTML = `<li>Be the first to set a score for the ${getDeckName(selectedDeck)} deck!</li>`;
+                leaderboardList.innerHTML = `<li>Be the first to set a score!</li>`;
                 return;
             }
 
@@ -409,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const scoreData = {
             name: name,
             score: currentScore,
-            deck: selectedDeck,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -426,15 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function getDeckName(deckId) {
-        const deckNames = {
-            'default': 'Default',
-            '90sNostalgia': '90s Nostalgia',
-            'rugbyStats': 'Rugby Stats'
-        };
-        return deckNames[deckId] || 'Unknown Deck';
-    }
-
     function getGradedTitle(score) {
         if (score <= 3) return "Certified Saffa";
         if (score <= 7) return "Local Legend";
