@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckSelect = document.getElementById('deck-select');
 
     // Leaderboard elements
+    const leaderboardTitle = document.getElementById('leaderboard-title');
     const leaderboardList = document.getElementById('leaderboard-list');
     const highscoreInputContainer = document.getElementById('highscore-input-container');
     const playerInitials = document.getElementById('player-initials');
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Leaderboard check
         if (db) {
             try {
-                const leaderboardRef = db.collection('leaderboard');
+                const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
                 const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(10).get();
                 const lowestScoreOnLeaderboard = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1].data().score : 0;
 
@@ -322,6 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function showLeaderboard() {
         switchScreen('leaderboard');
+        leaderboardTitle.textContent = `${getDeckName(selectedDeck)} Leaderboard`;
         leaderboardList.innerHTML = '<li>Loading...</li>';
 
         if (!db) {
@@ -330,11 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const leaderboardRef = db.collection('leaderboard');
+            // Use selectedDeck to query the specific leaderboard
+            const leaderboardRef = db.collection('leaderboard').where('deck', '==', selectedDeck);
             const snapshot = await leaderboardRef.orderBy('score', 'desc').limit(20).get();
 
             if (snapshot.empty) {
-                leaderboardList.innerHTML = '<li>The leaderboard is empty! Be the first to set a score.</li>';
+                leaderboardList.innerHTML = `<li>Be the first to set a score for the ${getDeckName(selectedDeck)} deck!</li>`;
                 return;
             }
 
@@ -366,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scoreData = {
             name: name,
             score: currentScore,
+            deck: selectedDeck,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -382,6 +386,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    function getDeckName(deckId) {
+        const deckNames = {
+            'default': 'Default',
+            '90sNostalgia': '90s Nostalgia',
+            'rugbyStats': 'Rugby Stats'
+        };
+        return deckNames[deckId] || 'Unknown Deck';
+    }
+
     function getGradedTitle(score) {
         if (score <= 3) return "Certified Saffa";
         if (score <= 7) return "Local Legend";
