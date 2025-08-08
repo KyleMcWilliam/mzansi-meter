@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hadedaSound = document.getElementById('wrong-answer-hadeda');
     const taxiSound = document.getElementById('wrong-answer-taxi');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const customConfetti = confetti.create(confettiCanvas, {
+        resize: true,
+        useWorker: true
+    });
 
     // --- Game State ---
     let currentScore = 0;
@@ -86,41 +91,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function nextQuestion() {
-        clearTimeout(questionTimer); // NEW: Clear any previous timer
-
-        // Ensure buttons are enabled for the new question
+        clearTimeout(questionTimer);
         higherButton.disabled = false;
         lowerButton.disabled = false;
 
-        if (availableQuestions.length === 0) {
-            endGame("You answered all the questions!");
-            return;
-        }
+        card.classList.add('is-flipped');
 
-        const questionIndex = Math.floor(Math.random() * availableQuestions.length);
-        currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
+        setTimeout(() => {
+            if (availableQuestions.length === 0) {
+                endGame("You answered all the questions!");
+                return;
+            }
 
-        // NEW: Handle image display
-        if (currentQuestion.image) {
-            questionImage.src = currentQuestion.image;
-            questionImageContainer.style.display = 'block';
-        } else {
-            questionImageContainer.style.display = 'none';
-        }
+            const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
 
-        const actualValue = currentQuestion.value;
-        const offset = (Math.random() * 0.4 + 0.2) * actualValue;
-        let presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
-        if (presentedNumber <= 0) presentedNumber = actualValue / 2;
-        
-        presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
-        questionText.textContent = currentQuestion.question;
+            if (currentQuestion.image) {
+                questionImage.src = currentQuestion.image;
+                questionImageContainer.style.display = 'block';
+            } else {
+                questionImageContainer.style.display = 'none';
+            }
 
-        card.classList.remove('correct-answer');
-        void card.offsetWidth;
-        card.classList.add('correct-answer');
+            const actualValue = currentQuestion.value;
+            const offset = (Math.random() * 0.4 + 0.2) * actualValue;
+            let presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
+            if (presentedNumber <= 0) presentedNumber = actualValue / 2;
 
-        startTimer(); // NEW: Start the timer for the new question
+            presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
+            questionText.textContent = currentQuestion.question;
+
+            card.classList.remove('is-flipped');
+            startTimer();
+        }, 300); // Halfway through the 0.6s flip
     }
 
     // --- Answer Logic ---
@@ -140,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isCorrect) {
             currentScore++;
             updateScoreDisplay();
+            triggerConfetti();
+            if (navigator.vibrate) navigator.vibrate(50);
 
             // Show the correct answer pop-up
             answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
@@ -148,21 +153,29 @@ document.addEventListener('DOMContentLoaded', () => {
             // Wait, then hide popup and load next question
             setTimeout(() => {
                 answerPopup.classList.remove('show');
-                // Buttons are re-enabled in nextQuestion()
                 nextQuestion();
-            }, 1500); // 1.5 second delay
+            }, 1500);
 
         } else {
-            // Vibrate and play sound on wrong answer
-            gameContainer.classList.add('wrong-answer');
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             playWrongAnswerSound();
-
-            setTimeout(() => {
-                gameContainer.classList.remove('wrong-answer');
-                // Pass the correct reason for ending the game
-                endGame(`Eish, you got it wrong!`);
-            }, 500);
+            endGame(`Eish, you got it wrong!`);
         }
+    }
+
+    function triggerConfetti() {
+        const scoreRect = currentScoreDisplay.getBoundingClientRect();
+        const origin = {
+            x: (scoreRect.left + scoreRect.right) / 2 / window.innerWidth,
+            y: (scoreRect.top + scoreRect.bottom) / 2 / window.innerHeight
+        };
+
+        customConfetti({
+            particleCount: 100,
+            spread: 70,
+            origin: origin,
+            colors: ['#007A4D', '#FFB612', '#262626'] // Green, Gold, Black
+        });
     }
 
     // --- NEW: Timer Functions ---
