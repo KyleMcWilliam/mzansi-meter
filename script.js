@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startButton = document.getElementById('start-button');
     const leaderboardButton = document.getElementById('leaderboard-button');
+    const gameLeaderboardButton = document.getElementById('game-leaderboard-button');
     const backToStartButton = document.getElementById('back-to-start-button');
     const restartButton = document.getElementById('restart-button');
     const shareButton = document.getElementById('share-button');
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const QUESTION_TIME = 10000; // 10 seconds in milliseconds
     let questionTimer; // NEW: Timer variable
     let db; // Firebase Firestore instance
+    let previousScreen = 'start';
 
     // --- Firebase SDK ---
     const firebaseConfig = {
@@ -119,8 +121,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         deckSelect.addEventListener('change', handleDeckChange);
-        leaderboardButton.addEventListener('click', showLeaderboard);
-        backToStartButton.addEventListener('click', () => switchScreen('start'));
+        leaderboardButton.addEventListener('click', () => showLeaderboard('start'));
+        gameLeaderboardButton.addEventListener('click', () => showLeaderboard('game'));
+        backToStartButton.addEventListener('click', () => {
+            switchScreen(previousScreen);
+            if (previousScreen === 'game') {
+                startTimer(); // Resume timer when going back to the game
+            }
+        });
         submitScoreButton.addEventListener('click', submitScore);
     }
 
@@ -332,7 +340,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function showLeaderboard() {
+    async function showLeaderboard(from) {
+        if (from) {
+            previousScreen = from;
+        }
+        if (previousScreen === 'game') {
+            clearTimeout(questionTimer);
+        }
         switchScreen('leaderboard');
         leaderboardTitle.textContent = `${getDeckName(selectedDeck)} Leaderboard`;
         leaderboardList.innerHTML = '<li>Loading...</li>';
@@ -388,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!db) throw new Error("Firestore is not initialized.");
             await db.collection('leaderboard').add(scoreData);
             highscoreInputContainer.innerHTML = '<p>Your score has been submitted!</p>';
-            setTimeout(showLeaderboard, 1500); // Show updated leaderboard after a delay
+            setTimeout(() => showLeaderboard('start'), 1500); // Show updated leaderboard after a delay
         } catch (error) {
             console.error("Error submitting score:", error);
             alert("There was an error submitting your score. Please try again.");
