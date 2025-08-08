@@ -230,39 +230,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Answer Logic ---
     function checkAnswer(guess) {
-        clearTimeout(questionTimer); // Stop the timer as soon as an answer is given
+        clearTimeout(questionTimer); // Stop the timer
 
-        let displayedNumberText = presentedValue.textContent.replace('R', '').replace(/,/g, '');
-        const displayedNumber = parseFloat(displayedNumberText);
-        const actualValue = currentQuestion.value;
-
-        let isCorrect = (guess === 'higher' && actualValue > displayedNumber) || (guess === 'lower' && actualValue < displayedNumber);
-
-        // Disable buttons immediately after a guess
+        // Disable buttons immediately to prevent multiple guesses
         higherButton.disabled = true;
         lowerButton.disabled = true;
 
+        const cardFront = document.getElementById('card-front');
+        const displayedNumberText = presentedValue.textContent.replace('R', '').replace(/,/g, '');
+        const displayedNumber = parseFloat(displayedNumberText);
+        const actualValue = currentQuestion.value;
+        const isCorrect = (guess === 'higher' && actualValue > displayedNumber) || (guess === 'lower' && actualValue < displayedNumber);
+
         if (isCorrect) {
+            // --- CORRECT ANSWER ---
+            cardFront.classList.add('correct');
+            answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
+            answerPopup.style.backgroundColor = 'rgba(0, 122, 77, 0.95)'; // Green
             currentScore++;
             updateScoreDisplay();
             triggerConfetti();
             if (navigator.vibrate) navigator.vibrate(50);
-
-            // Show the correct answer pop-up
-            answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
-            answerPopup.classList.add('show');
-
-            // Wait, then hide popup and load next question
-            setTimeout(() => {
-                answerPopup.classList.remove('show');
-                nextQuestion();
-            }, 1500);
-
         } else {
+            // --- INCORRECT ANSWER ---
+            cardFront.classList.add('incorrect');
+            answerPopup.innerHTML = `Eish! The right answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
+            answerPopup.style.backgroundColor = 'rgba(222, 56, 49, 0.95)'; // Red
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             playWrongAnswerSound();
-            endGame(`Eish, you got it wrong!`);
         }
+
+        // Show the answer popup
+        answerPopup.classList.add('show');
+
+        // Wait for 1.5 seconds, then proceed
+        setTimeout(() => {
+            answerPopup.classList.remove('show');
+            cardFront.classList.remove('correct', 'incorrect');
+
+            if (isCorrect) {
+                nextQuestion();
+            } else {
+                endGame(`Eish, you got it wrong!`);
+            }
+        }, 1500);
     }
 
     function triggerConfetti() {
