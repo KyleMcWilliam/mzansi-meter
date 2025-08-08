@@ -354,3 +354,21 @@ body {
     font-size: 1.1rem;
     text-transform: uppercase;
 }
+
+/* Ad Container Styles */
+#ad-container {
+    margin: 20px 0;
+    text-align: center;
+    min-height: 100px; /* To prevent layout shift */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#ad-container small {
+    display: block;
+    margin-bottom: 5px;
+    color: #999;
+    font-size: 0.75rem;
+}
