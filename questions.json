@@ -1,0 +1,79 @@
+[
+    {
+        "question": "Price of a 2-litre Stoney Ginger Beer at a major retailer",
+        "value": 24.50,
+        "format": "currency"
+    },
+    {
+        "question": "Number of official languages in South Africa",
+        "value": 12,
+        "format": "number"
+    },
+    {
+        "question": "The year Wimpy was founded in Durban",
+        "value": 1967,
+        "format": "number"
+    },
+    {
+        "question": "Price of this iconic South African meal, the Gatsby",
+        "value": 150,
+        "format": "currency",
+        "image": "https://images.prismic.io/eatapp/ZDYwY2YxM2ItZDU4NS00ZTI5LWI3ZjctOGZlMDRlZWIzMWRl_gatsby-jpeg.jpg?auto=compress,format"
+    },
+    {
+        "question": "Number of times the Springboks have won the Rugby World Cup",
+        "value": 4,
+        "format": "number"
+    },
+    {
+        "question": "Cost of a standard adult ticket to the top of Table Mountain's Aerial Cableway (one-way)",
+        "value": 240,
+        "format": "currency"
+    },
+    {
+        "question": "The year this classic album, 'Weekend Special' by Brenda Fassie, was released",
+        "value": 1983,
+        "format": "number",
+        "image": "https://i.scdn.co/image/ab67616d0000b2734623725ed3eb01643c71bb04"
+    },
+    {
+        "question": "The N1 highway's total length in kilometres",
+        "value": 1940,
+        "format": "number"
+    },
+    {
+        "question": "Average number of eggs a Hadeda Ibis lays per clutch",
+        "value": 3,
+        "format": "number"
+    },
+    {
+        "question": "The year 'District 9' was released in cinemas",
+        "value": 2009,
+        "format": "number"
+    },
+    {
+        "question": "The price of a Chappies bubblegum",
+        "value": 1.00,
+        "format": "currency"
+    },
+    {
+        "question": "Number of provinces in South Africa",
+        "value": 9,
+        "format": "number"
+    },
+    {
+        "question": "The record-holding number of Comrades Marathon wins by a single male runner (Bruce Fordyce)",
+        "value": 9,
+        "format": "number"
+    },
+    {
+        "question": "Price of a Checkers rotisserie chicken",
+        "value": 99.99,
+        "format": "currency"
+    },
+    {
+        "question": "The year Nelson Mandela was released from prison",
+        "value": 1990,
+        "format": "number"
+    }
+]

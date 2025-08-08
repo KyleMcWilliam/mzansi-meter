@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mzansi Meter - The SA Guessing Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="logo">
+                <h1>The<br><span>Mzansi</span><br>Meter</h1>
+                <p>The SA Guessing Game</p>
+            </div>
+            <div class="high-score-display">High Score: <span id="high-score-start">0</span></div>
+            <button id="start-button" class="action-button">Start Game</button>
+            <div class="footer-note">🇿🇦 How lekker is your local knowledge? 🇿🇦</div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div id="score-streak">Score: <span id="current-score">0</span></div>
+            <div id="card">
+                <!-- NEW: Timer bar -->
+                <div id="timer-container">
+                    <div id="timer-bar"></div>
+                </div>
+                <!-- NEW: Image container -->
+                <div id="question-image-container">
+                    <img id="question-image" src="" alt="Question context image">
+                </div>
+                <div id="question-text"></div>
+                <div class="presented-value-container">
+                    <div id="presented-value"></div>
+                </div>
+            </div>
+            <div id="buttons-container">
+                <button id="higher-button" class="choice-button">Higher</button>
+                <button id="lower-button" class="choice-button">Lower</button>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="screen">
+            <h2 id="final-score-title">Eish, you got it wrong!</h2>
+            <div id="final-score-container">
+                <p>Final Score</p>
+                <div id="final-score">0</div>
+            </div>
+            <div id="graded-title-container">
+                <p>"<span id="graded-title">Certified Saffa</span>"</p>
+            </div>
+             <!-- NEW: Answer Reveal Section -->
+            <div id="answer-reveal-container">
+                <p id="reveal-question-text"></p>
+                <p>The correct answer was: <span id="reveal-correct-answer"></span></p>
+            </div>
+            <button id="share-button" class="action-button">Share Your Score</button>
+            <button id="restart-button" class="action-button secondary">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Audio Files -->
+    <audio id="wrong-answer-hadeda" src="https://www.myinstants.com/media/sounds/hadeda_1.mp3" preload="auto"></audio>
+    <audio id="wrong-answer-taxi" src="https://www.myinstants.com/media/sounds/taxi-hoot.mp3" preload="auto"></audio>
+
+    <script src="questions.json"></script>
+    <script src="script.js"></script>
+</body>
+</html>
