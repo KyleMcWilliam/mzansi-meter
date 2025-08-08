@@ -1,524 +1,595 @@
-[
-    {
-        "question": "Price of a 2-litre Stoney Ginger Beer at a major retailer",
-        "value": 24.50,
-        "format": "currency"
-    },
-    {
-        "question": "Number of official languages in South Africa now",
-        "value": 12,
-        "format": "number"
-    },
-    {
-        "question": "The year Wimpy was founded in Durban",
-        "value": 1967,
-        "format": "year"
-    },
-    {
-        "question": "Number of times the Springboks have won the Rugby World Cup",
-        "value": 4,
-        "format": "number"
-    },
-    {
-        "question": "The year Nelson Mandela was released from prison",
-        "value": 1990,
-        "format": "year"
-    },
-    {
-        "question": "Price of a full rotisserie chicken from Checkers",
-        "value": 99.99,
-        "format": "currency"
-    },
-    {
-        "question": "The total number of provinces in South Africa",
-        "value": 9,
-        "format": "number"
-    },
-    {
-        "question": "The year the first democratic election was held in South Africa",
-        "value": 1994,
-        "format": "year"
-    },
-    {
-        "question": "Price of a single Chappies bubblegum",
-        "value": 1.00,
-        "format": "currency"
-    },
-    {
-        "question": "The total length of the N1 highway in kilometres",
-        "value": 1940,
-        "format": "number"
-    },
-    {
-        "question": "The year the movie 'Tsotsi' won an Academy Award",
-        "value": 2006,
-        "format": "year"
-    },
-    {
-        "question": "Average number of eggs a Hadeda Ibis lays in its nest",
-        "value": 3,
-        "format": "number"
-    },
-    {
-        "question": "Price of a 500ml Steri Stumpie (chocolate flavour)",
-        "value": 21.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of points Francois Pienaar's drop goal was worth in the '95 final (just kidding, Joel Stransky scored it)",
-        "value": 3,
-        "format": "number"
-    },
-    {
-        "question": "The year Gold Reef City theme park opened",
-        "value": 1986,
-        "format": "year"
-    },
-    {
-        "question": "Cost in Rands for a standard Big Mac burger from McDonald's",
-        "value": 49.50,
-        "format": "currency"
-    },
-    {
-        "question": "The number of players in a starting cricket team",
-        "value": 11,
-        "format": "number"
-    },
-    {
-        "question": "The year the iconic vuvuzela became famous worldwide",
-        "value": 2010,
-        "format": "year",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Vuvuzela_SOUND.jpg/1024px-Vuvuzela_SOUND.jpg"
-    },
-    {
-        "question": "Number of 'Big Five' animal species",
-        "value": 5,
-        "format": "number"
-    },
-    {
-        "question": "The height of Table Mountain in metres at its highest point",
-        "value": 1086,
-        "format": "number"
-    },
-    {
-        "question": "The price of a standard 750ml bottle of Black Label beer",
-        "value": 22.00,
-        "format": "currency"
-    },
-    {
-        "question": "The year Brenda Fassie released her hit song 'Weekend Special'",
-        "value": 1983,
-        "format": "year",
-        "image": "https://i.scdn.co/image/ab67616d0000b2734623725ed3eb01643c71bb04"
-    },
-    {
-        "question": "Maximum number of people legally allowed in a 16-seater minibus taxi",
-        "value": 16,
-        "format": "number"
-    },
-    {
-        "question": "The year the TV soap '7de Laan' first aired",
-        "value": 2000,
-        "format": "year"
-    },
-    {
-        "question": "Price of a standard loaf of Sasko bread",
-        "value": 18.50,
-        "format": "currency"
-    },
-    {
-        "question": "The year Nando's opened its first restaurant in Rosettenville",
-        "value": 1987,
-        "format": "year"
-    },
-    {
-        "question": "The number of sharp points on the Protea flower logo for SA cricket",
-        "value": 6,
-        "format": "number"
-    },
-    {
-        "question": "Cost of a 'Streetwise Two' from KFC",
-        "value": 54.90,
-        "format": "currency"
-    },
-    {
-        "question": "The year Bafana Bafana won the Africa Cup of Nations",
-        "value": 1996,
-        "format": "year"
-    },
-    {
-        "question": "Number of colours in the South African flag",
-        "value": 6,
-        "format": "number"
-    },
-    {
-        "question": "The record number of Comrades Marathon wins by Bruce Fordyce",
-        "value": 9,
-        "format": "number"
-    },
-    {
-        "question": "The year M-Net was launched",
-        "value": 1986,
-        "format": "year"
-    },
-    {
-        "question": "The price of a 1kg bag of White Star Maize Meal",
-        "value": 23.00,
-        "format": "currency"
-    },
-    {
-        "question": "The year the Cape Town Stadium (Green Point) was completed",
-        "value": 2009,
-        "format": "year"
-    },
-    {
-        "question": "The number of seasons the TV show 'Egoli: Place of Gold' ran for",
-        "value": 18,
-        "format": "number"
-    },
-    {
-        "question": "The year Pick n Pay was founded by Raymond Ackerman",
-        "value": 1967,
-        "format": "year"
-    },
-    {
-        "question": "Price of a single 'slap chip' roll from a corner cafe",
-        "value": 25.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of rhinos poached in South Africa in 2023",
-        "value": 448,
-        "format": "number"
-    },
-    {
-        "question": "The year the first Shoprite store opened its doors",
-        "value": 1979,
-        "format": "year"
-    },
-    {
-        "question": "The approximate number of seats in the FNB Stadium (Soccer City)",
-        "value": 94700,
-        "format": "number"
-    },
-    {
-        "question": "The price of a 410g can of KOO baked beans",
-        "value": 16.00,
-        "format": "currency"
-    },
-    {
-        "question": "The year of the Soweto Uprising",
-        "value": 1976,
-        "format": "year"
-    },
-    {
-        "question": "The number of strings on a traditional Zulu guitar (Uhadi)",
-        "value": 1,
-        "format": "number"
-    },
-    {
-        "question": "The year 'District 9' was released in cinemas",
-        "value": 2009,
-        "format": "year"
-    },
-    {
-        "question": "The price of a 2-litre carton of Clover milk",
-        "value": 36.00,
-        "format": "currency"
-    },
-    {
-        "question": "The year the Union Buildings in Pretoria were completed",
-        "value": 1913,
-        "format": "year"
-    },
-    {
-        "question": "The number of member countries in the Southern African Development Community (SADC)",
-        "value": 16,
-        "format": "number"
-    },
-    {
-        "question": "The year the first Toyota Corolla was built in South Africa",
-        "value": 1975,
-        "format": "year"
-    },
-    {
-        "question": "Price of a ticket for the Gautrain from Sandton to O.R. Tambo Airport",
-        "value": 198.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of capital cities in South Africa",
-        "value": 3,
-        "format": "number"
-    },
-    {
-        "question": "The year Caster Semenya won her first Olympic gold medal",
-        "value": 2012,
-        "format": "year"
-    },
-    {
-        "question": "The cost of a boerewors roll at a local rugby match",
-        "value": 40.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of floral kingdoms in the world located entirely within one country (The Cape Floral Kingdom)",
-        "value": 1,
-        "format": "number"
-    },
-    {
-        "question": "The year 5FM was launched (previously Radio 5)",
-        "value": 1975,
-        "format": "year"
-    },
-    {
-        "question": "The price for a pack of 20 Simba All Gold Tomato Sauce chips",
-        "value": 22.50,
-        "format": "currency"
-    },
-    {
-        "question": "Number of studio albums released by the band Die Antwoord",
-        "value": 5,
-        "format": "number"
-    },
-    {
-        "question": "The year the Bloukrans Bridge bungee jump opened",
-        "value": 1997,
-        "format": "year"
-    },
-    {
-        "question": "Price of a 1.5 litre bottle of Appletiser",
-        "value": 35.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of times Gary Player won the Masters Tournament",
-        "value": 3,
-        "format": "number"
-    },
-    {
-        "question": "The year the rand (ZAR) was introduced",
-        "value": 1961,
-        "format": "year"
-    },
-    {
-        "question": "Price of a pack of Wilson's Toffees",
-        "value": 15.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of national parks managed by SANParks",
-        "value": 19,
-        "format": "number"
-    },
-    {
-        "question": "The year television was introduced in South Africa",
-        "value": 1976,
-        "format": "year"
-    },
-    {
-        "question": "Price for a subscription to the DStv Premium package",
-        "value": 879,
-        "format": "currency"
-    },
-    {
-        "question": "The number of people who have served as President of post-apartheid South Africa",
-        "value": 5,
-        "format": "number"
-    },
-    {
-        "question": "The year Charlize Theron won her Best Actress Oscar for 'Monster'",
-        "value": 2004,
-        "format": "year"
-    },
-    {
-        "question": "Price of a regular coffee at a Vida e Caffè",
-        "value": 28.00,
-        "format": "currency"
-    },
-    {
-        "question": "The length of the Orange River in kilometres",
-        "value": 2200,
-        "format": "number"
-    },
-    {
-        "question": "The year the first 'Spur Steak Ranch' opened in Cape Town",
-        "value": 1967,
-        "format": "year"
-    },
-    {
-        "question": "The price of a 'Wimpy Classic' breakfast",
-        "value": 79.90,
-        "format": "currency"
-    },
-    {
-        "question": "The number of World Heritage Sites in South Africa",
-        "value": 10,
-        "format": "number"
-    },
-    {
-        "question": "The year the Voortrekker Monument was completed",
-        "value": 1949,
-        "format": "year"
-    },
-    {
-        "question": "Price of a 1 litre box of Liqui-Fruit juice",
-        "value": 30.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of contestants in a season of 'Idols South Africa' that make it to the live shows",
-        "value": 10,
-        "format": "number"
-    },
-    {
-        "question": "The year the first cellphone call was made in South Africa (Vodacom)",
-        "value": 1994,
-        "format": "year"
-    },
-    {
-        "question": "Price of a large (30cm) Debonairs 'Triple Decker' pizza",
-        "value": 189.90,
-        "format": "currency"
-    },
-    {
-        "question": "The number of pedestrian crossings painted like zebra stripes in the entire city of Johannesburg",
-        "value": 1500,
-        "format": "number"
-    },
-    {
-        "question": "The year of the 'Great Trek' began",
-        "value": 1835,
-        "format": "year"
-    },
-    {
-        "question": "Price of a block of Cadbury Dairy Milk chocolate (80g)",
-        "value": 19.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of traffic circles (roundabouts) on the road to Sun City from Johannesburg",
-        "value": 25,
-        "format": "number"
-    },
-    {
-        "question": "The year the South African flag was first used",
-        "value": 1994,
-        "format": "year"
-    },
-    {
-        "question": "Price of a family-sized bag of NikNaks",
-        "value": 18.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of steps to the top of the lighthouse at Cape Point",
-        "value": 122,
-        "format": "number"
-    },
-    {
-        "question": "The year the first Cape Town Minstrel Carnival was held",
-        "value": 1907,
-        "format": "year"
-    },
-    {
-        "question": "Price for a general access ticket to a Stormers vs Bulls rugby match at Loftus",
-        "value": 150,
-        "format": "currency"
-    },
-    {
-        "question": "The number of days in the '90-day' waiting period for a new SASSA grant application",
-        "value": 90,
-        "format": "number"
-    },
-    {
-        "question": "The year 'Klippies en Cola' was basically invented",
-        "value": 1938,
-        "format": "year"
-    },
-    {
-        "question": "Price of a 2-ply roll of Twinsaver toilet paper",
-        "value": 11.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of tunnels on Chapman's Peak Drive",
-        "value": 1,
-        "format": "number"
-    },
-    {
-        "question": "The year the last episode of 'Vetkoekpaleis' aired",
-        "value": 2000,
-        "format": "year"
-    },
-    {
-        "question": "Price of a 'Hunter's Dry' cider at a local bar",
-        "value": 35.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of universities in South Africa",
-        "value": 26,
-        "format": "number"
-    },
-    {
-        "question": "The year load-shedding was first implemented by Eskom",
-        "value": 2007,
-        "format": "year"
-    },
-    {
-        "question": "Price of a packet of Fizzers sweets",
-        "value": 10.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of times Kaizer Chiefs have won the PSL title",
-        "value": 4,
-        "format": "number"
-    },
-    {
-        "question": "The year the first season of 'Big Brother South Africa' aired",
-        "value": 2001,
-        "format": "year"
-    },
-    {
-        "question": "Price of a 500g tub of Rama margarine",
-        "value": 39.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of men who have walked on the moon since the last Apollo mission",
-        "value": 0,
-        "format": "number"
-    },
-    {
-        "question": "The year Lucky Dube released his album 'Slave'",
-        "value": 1987,
-        "format": "year"
-    },
-    {
-        "question": "Price for a vetkoek with mince from a padstal",
-        "value": 30.00,
-        "format": "currency"
-    },
-    {
-        "question": "The number of corners on the Kyalami Grand Prix Circuit",
-        "value": 16,
-        "format": "number"
-    },
-    {
-        "question": "The year of the last episode of the 'Leon Schuster' candid camera show",
-        "value": 2005,
-        "format": "year"
-    },
-    {
-        "question": "Price of a large portion of biltong (250g) from a butcher",
-        "value": 90.00,
-        "format": "currency"
-    },
-    {
-        "question": "Number of times the South African Post Office delivered a package on time in 2023",
-        "value": 500000,
-        "format": "number"
-    }
-]
+{
+    "default": [
+        {
+            "question": "Price of a 2-litre Stoney Ginger Beer at a major retailer",
+            "value": 24.50,
+            "format": "currency"
+        },
+        {
+            "question": "Number of official languages in South Africa now",
+            "value": 12,
+            "format": "number"
+        },
+        {
+            "question": "The year Wimpy was founded in Durban",
+            "value": 1967,
+            "format": "year"
+        },
+        {
+            "question": "Number of times the Springboks have won the Rugby World Cup",
+            "value": 4,
+            "format": "number"
+        },
+        {
+            "question": "The year Nelson Mandela was released from prison",
+            "value": 1990,
+            "format": "year"
+        },
+        {
+            "question": "Price of a full rotisserie chicken from Checkers",
+            "value": 99.99,
+            "format": "currency"
+        },
+        {
+            "question": "The total number of provinces in South Africa",
+            "value": 9,
+            "format": "number"
+        },
+        {
+            "question": "The year the first democratic election was held in South Africa",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "Price of a single Chappies bubblegum",
+            "value": 1.00,
+            "format": "currency"
+        },
+        {
+            "question": "The total length of the N1 highway in kilometres",
+            "value": 1940,
+            "format": "number"
+        },
+        {
+            "question": "The year the movie 'Tsotsi' won an Academy Award",
+            "value": 2006,
+            "format": "year"
+        },
+        {
+            "question": "Average number of eggs a Hadeda Ibis lays in its nest",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "Price of a 500ml Steri Stumpie (chocolate flavour)",
+            "value": 21.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of points Francois Pienaar's drop goal was worth in the '95 final (just kidding, Joel Stransky scored it)",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "The year Gold Reef City theme park opened",
+            "value": 1986,
+            "format": "year"
+        },
+        {
+            "question": "Cost in Rands for a standard Big Mac burger from McDonald's",
+            "value": 49.50,
+            "format": "currency"
+        },
+        {
+            "question": "The number of players in a starting cricket team",
+            "value": 11,
+            "format": "number"
+        },
+        {
+            "question": "The year the iconic vuvuzela became famous worldwide",
+            "value": 2010,
+            "format": "year",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Vuvuzela_SOUND.jpg/1024px-Vuvuzela_SOUND.jpg"
+        },
+        {
+            "question": "Number of 'Big Five' animal species",
+            "value": 5,
+            "format": "number"
+        },
+        {
+            "question": "The height of Table Mountain in metres at its highest point",
+            "value": 1086,
+            "format": "number"
+        },
+        {
+            "question": "The price of a standard 750ml bottle of Black Label beer",
+            "value": 22.00,
+            "format": "currency"
+        },
+        {
+            "question": "The year Brenda Fassie released her hit song 'Weekend Special'",
+            "value": 1983,
+            "format": "year",
+            "image": "https://i.scdn.co/image/ab67616d0000b2734623725ed3eb01643c71bb04"
+        },
+        {
+            "question": "Maximum number of people legally allowed in a 16-seater minibus taxi",
+            "value": 16,
+            "format": "number"
+        },
+        {
+            "question": "The year the TV soap '7de Laan' first aired",
+            "value": 2000,
+            "format": "year"
+        },
+        {
+            "question": "Price of a standard loaf of Sasko bread",
+            "value": 18.50,
+            "format": "currency"
+        },
+        {
+            "question": "The year Nando's opened its first restaurant in Rosettenville",
+            "value": 1987,
+            "format": "year"
+        },
+        {
+            "question": "The number of sharp points on the Protea flower logo for SA cricket",
+            "value": 6,
+            "format": "number"
+        },
+        {
+            "question": "Cost of a 'Streetwise Two' from KFC",
+            "value": 54.90,
+            "format": "currency"
+        },
+        {
+            "question": "The year Bafana Bafana won the Africa Cup of Nations",
+            "value": 1996,
+            "format": "year"
+        },
+        {
+            "question": "Number of colours in the South African flag",
+            "value": 6,
+            "format": "number"
+        },
+        {
+            "question": "The record number of Comrades Marathon wins by Bruce Fordyce",
+            "value": 9,
+            "format": "number"
+        },
+        {
+            "question": "The year M-Net was launched",
+            "value": 1986,
+            "format": "year"
+        },
+        {
+            "question": "The price of a 1kg bag of White Star Maize Meal",
+            "value": 23.00,
+            "format": "currency"
+        },
+        {
+            "question": "The year the Cape Town Stadium (Green Point) was completed",
+            "value": 2009,
+            "format": "year"
+        },
+        {
+            "question": "The number of seasons the TV show 'Egoli: Place of Gold' ran for",
+            "value": 18,
+            "format": "number"
+        },
+        {
+            "question": "The year Pick n Pay was founded by Raymond Ackerman",
+            "value": 1967,
+            "format": "year"
+        },
+        {
+            "question": "Price of a single 'slap chip' roll from a corner cafe",
+            "value": 25.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of rhinos poached in South Africa in 2023",
+            "value": 448,
+            "format": "number"
+        },
+        {
+            "question": "The year the first Shoprite store opened its doors",
+            "value": 1979,
+            "format": "year"
+        },
+        {
+            "question": "The approximate number of seats in the FNB Stadium (Soccer City)",
+            "value": 94700,
+            "format": "number"
+        },
+        {
+            "question": "The price of a 410g can of KOO baked beans",
+            "value": 16.00,
+            "format": "currency"
+        },
+        {
+            "question": "The year of the Soweto Uprising",
+            "value": 1976,
+            "format": "year"
+        },
+        {
+            "question": "The number of strings on a traditional Zulu guitar (Uhadi)",
+            "value": 1,
+            "format": "number"
+        },
+        {
+            "question": "The year 'District 9' was released in cinemas",
+            "value": 2009,
+            "format": "year"
+        },
+        {
+            "question": "The price of a 2-litre carton of Clover milk",
+            "value": 36.00,
+            "format": "currency"
+        },
+        {
+            "question": "The year the Union Buildings in Pretoria were completed",
+            "value": 1913,
+            "format": "year"
+        },
+        {
+            "question": "The number of member countries in the Southern African Development Community (SADC)",
+            "value": 16,
+            "format": "number"
+        },
+        {
+            "question": "The year the first Toyota Corolla was built in South Africa",
+            "value": 1975,
+            "format": "year"
+        },
+        {
+            "question": "Price of a ticket for the Gautrain from Sandton to O.R. Tambo Airport",
+            "value": 198.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of capital cities in South Africa",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "The year Caster Semenya won her first Olympic gold medal",
+            "value": 2012,
+            "format": "year"
+        },
+        {
+            "question": "The cost of a boerewors roll at a local rugby match",
+            "value": 40.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of floral kingdoms in the world located entirely within one country (The Cape Floral Kingdom)",
+            "value": 1,
+            "format": "number"
+        },
+        {
+            "question": "The year 5FM was launched (previously Radio 5)",
+            "value": 1975,
+            "format": "year"
+        },
+        {
+            "question": "The price for a pack of 20 Simba All Gold Tomato Sauce chips",
+            "value": 22.50,
+            "format": "currency"
+        },
+        {
+            "question": "Number of studio albums released by the band Die Antwoord",
+            "value": 5,
+            "format": "number"
+        },
+        {
+            "question": "The year the Bloukrans Bridge bungee jump opened",
+            "value": 1997,
+            "format": "year"
+        },
+        {
+            "question": "Price of a 1.5 litre bottle of Appletiser",
+            "value": 35.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of times Gary Player won the Masters Tournament",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "The year the rand (ZAR) was introduced",
+            "value": 1961,
+            "format": "year"
+        },
+        {
+            "question": "Price of a pack of Wilson's Toffees",
+            "value": 15.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of national parks managed by SANParks",
+            "value": 19,
+            "format": "number"
+        },
+        {
+            "question": "The year television was introduced in South Africa",
+            "value": 1976,
+            "format": "year"
+        },
+        {
+            "question": "Price for a subscription to the DStv Premium package",
+            "value": 879,
+            "format": "currency"
+        },
+        {
+            "question": "The number of people who have served as President of post-apartheid South Africa",
+            "value": 5,
+            "format": "number"
+        },
+        {
+            "question": "The year Charlize Theron won her Best Actress Oscar for 'Monster'",
+            "value": 2004,
+            "format": "year"
+        },
+        {
+            "question": "Price of a regular coffee at a Vida e Caffè",
+            "value": 28.00,
+            "format": "currency"
+        },
+        {
+            "question": "The length of the Orange River in kilometres",
+            "value": 2200,
+            "format": "number"
+        },
+        {
+            "question": "The year the first 'Spur Steak Ranch' opened in Cape Town",
+            "value": 1967,
+            "format": "year"
+        },
+        {
+            "question": "The price of a 'Wimpy Classic' breakfast",
+            "value": 79.90,
+            "format": "currency"
+        },
+        {
+            "question": "The number of World Heritage Sites in South Africa",
+            "value": 10,
+            "format": "number"
+        },
+        {
+            "question": "The year the Voortrekker Monument was completed",
+            "value": 1949,
+            "format": "year"
+        },
+        {
+            "question": "Price of a 1 litre box of Liqui-Fruit juice",
+            "value": 30.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of contestants in a season of 'Idols South Africa' that make it to the live shows",
+            "value": 10,
+            "format": "number"
+        },
+        {
+            "question": "The year the first cellphone call was made in South Africa (Vodacom)",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "Price of a large (30cm) Debonairs 'Triple Decker' pizza",
+            "value": 189.90,
+            "format": "currency"
+        },
+        {
+            "question": "The number of pedestrian crossings painted like zebra stripes in the entire city of Johannesburg",
+            "value": 1500,
+            "format": "number"
+        },
+        {
+            "question": "The year of the 'Great Trek' began",
+            "value": 1835,
+            "format": "year"
+        },
+        {
+            "question": "Price of a block of Cadbury Dairy Milk chocolate (80g)",
+            "value": 19.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of traffic circles (roundabouts) on the road to Sun City from Johannesburg",
+            "value": 25,
+            "format": "number"
+        },
+        {
+            "question": "The year the South African flag was first used",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "Price of a family-sized bag of NikNaks",
+            "value": 18.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of steps to the top of the lighthouse at Cape Point",
+            "value": 122,
+            "format": "number"
+        },
+        {
+            "question": "The year the first Cape Town Minstrel Carnival was held",
+            "value": 1907,
+            "format": "year"
+        },
+        {
+            "question": "Price for a general access ticket to a Stormers vs Bulls rugby match at Loftus",
+            "value": 150,
+            "format": "currency"
+        },
+        {
+            "question": "The number of days in the '90-day' waiting period for a new SASSA grant application",
+            "value": 90,
+            "format": "number"
+        },
+        {
+            "question": "The year 'Klippies en Cola' was basically invented",
+            "value": 1938,
+            "format": "year"
+        },
+        {
+            "question": "Price of a 2-ply roll of Twinsaver toilet paper",
+            "value": 11.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of tunnels on Chapman's Peak Drive",
+            "value": 1,
+            "format": "number"
+        },
+        {
+            "question": "The year the last episode of 'Vetkoekpaleis' aired",
+            "value": 2000,
+            "format": "year"
+        },
+        {
+            "question": "Price of a 'Hunter's Dry' cider at a local bar",
+            "value": 35.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of universities in South Africa",
+            "value": 26,
+            "format": "number"
+        },
+        {
+            "question": "The year load-shedding was first implemented by Eskom",
+            "value": 2007,
+            "format": "year"
+        },
+        {
+            "question": "Price of a packet of Fizzers sweets",
+            "value": 10.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of times Kaizer Chiefs have won the PSL title",
+            "value": 4,
+            "format": "number"
+        },
+        {
+            "question": "The year the first season of 'Big Brother South Africa' aired",
+            "value": 2001,
+            "format": "year"
+        },
+        {
+            "question": "Price of a 500g tub of Rama margarine",
+            "value": 39.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of men who have walked on the moon since the last Apollo mission",
+            "value": 0,
+            "format": "number"
+        },
+        {
+            "question": "The year Lucky Dube released his album 'Slave'",
+            "value": 1987,
+            "format": "year"
+        },
+        {
+            "question": "Price for a vetkoek with mince from a padstal",
+            "value": 30.00,
+            "format": "currency"
+        },
+        {
+            "question": "The number of corners on the Kyalami Grand Prix Circuit",
+            "value": 16,
+            "format": "number"
+        },
+        {
+            "question": "The year of the last episode of the 'Leon Schuster' candid camera show",
+            "value": 2005,
+            "format": "year"
+        },
+        {
+            "question": "Price of a large portion of biltong (250g) from a butcher",
+            "value": 90.00,
+            "format": "currency"
+        },
+        {
+            "question": "Number of times the South African Post Office delivered a package on time in 2023",
+            "value": 500000,
+            "format": "number"
+        }
+    ],
+    "90sNostalgia": [
+        {
+            "question": "The year Nelson Mandela was released from prison",
+            "value": 1990,
+            "format": "year"
+        },
+        {
+            "question": "The year the first democratic election was held in South Africa",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "The number of points Francois Pienaar's drop goal was worth in the '95 final (just kidding, Joel Stransky scored it)",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "The year Bafana Bafana won the Africa Cup of Nations",
+            "value": 1996,
+            "format": "year"
+        },
+        {
+            "question": "The year the Bloukrans Bridge bungee jump opened",
+            "value": 1997,
+            "format": "year"
+        },
+        {
+            "question": "The year the first cellphone call was made in South Africa (Vodacom)",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "The year the South African flag was first used",
+            "value": 1994,
+            "format": "year"
+        },
+        {
+            "question": "The number of seasons the TV show 'Egoli: Place of Gold' ran for",
+            "value": 18,
+            "format": "number"
+        },
+        {
+            "question": "The year M-Net was launched",
+            "value": 1986,
+            "format": "year"
+        }
+    ],
+    "rugbyStats": [
+        {
+            "question": "Number of times the Springboks have won the Rugby World Cup",
+            "value": 4,
+            "format": "number"
+        },
+        {
+            "question": "The number of points Francois Pienaar's drop goal was worth in the '95 final (just kidding, Joel Stransky scored it)",
+            "value": 3,
+            "format": "number"
+        },
+        {
+            "question": "Price for a general access ticket to a Stormers vs Bulls rugby match at Loftus",
+            "value": 150,
+            "format": "currency"
+        },
+        {
+            "question": "The cost of a boerewors roll at a local rugby match",
+            "value": 40.00,
+            "format": "currency"
+        }
+    ]
+}
