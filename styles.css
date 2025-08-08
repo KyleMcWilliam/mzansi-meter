@@ -32,6 +32,7 @@ body {
     overflow: hidden;
     position: relative;
     text-align: center;
+    perspective: 1000px;
 }
 
 .screen {
@@ -62,20 +63,65 @@ body {
 #score-streak { font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 10px; }
 
 #card {
-    background-color: var(--bg-color);
     width: 100%;
-    border-radius: 15px;
-    padding: 20px;
+    min-height: 350px; /* Adjust as needed */
     margin-bottom: 30px;
-    min-height: 200px;
+    position: relative;
+}
+
+#card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+#card.is-flipped #card-inner {
+    transform: rotateY(180deg);
+}
+
+#card-front, #card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
+}
+
+#card-front {
+    background-color: var(--bg-color);
     border: 2px solid #e9ecef;
-    position: relative;
-    overflow: hidden;
+    padding: 20px;
+}
+
+#card-back {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#card-back .logo {
+    text-align: center;
+}
+
+#card-back .logo h1 {
+    font-size: 2.5rem;
+    color: var(--light-color);
+}
+
+#card-back .logo span {
+    color: var(--secondary-color);
 }
 
 /* NEW: Timer Styles */
@@ -151,6 +197,35 @@ body {
 }
 
 
+/* --- Correct Answer Popup --- */
+#answer-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 122, 77, 0.95); /* primary-color with transparency */
+    color: var(--light-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 15px; /* Same as card */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 10;
+    pointer-events: none; /* Don't block clicks when hidden */
+}
+
+#answer-popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* --- General Button Styles --- */
 .action-button { width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 700; border-radius: 12px; border: none; cursor: pointer; background-color: var(--primary-color); color: var(--light-color); transition: background-color 0.2s ease; margin-bottom: 10px; }
 .action-button:hover { background-color: #005a3a; }
@@ -160,5 +235,3 @@ body {
 /* --- Feedback Animations --- */
 .correct-answer { animation: correctAnswer 0.5s ease; }
 @keyframes correctAnswer { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-.wrong-answer { animation: wrongAnswer 0.5s ease; }
-@keyframes wrongAnswer { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { translateX(-10px); } 80% { transform: translateX(10px); } }

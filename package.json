@@ -1,5 +1,20 @@
 {
+<<<<<<< HEAD
   "dependencies": {
     "firebase": "^12.1.0"
   }
+=======
+  "name": "mzansi-meter-game",
+  "version": "1.0.0",
+  "description": "A South African guessing game.",
+  "main": "script.js",
+  "dependencies": {
+    "canvas": "^2.11.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+>>>>>>> 64f3ef05e0fbdc9542f8e378af058c0f74ae6b40
 }
