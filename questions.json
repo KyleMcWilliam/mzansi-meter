@@ -28,7 +28,7 @@
     },
     {
         "question": "Cost of a standard adult ticket to the top of Table Mountain's Aerial Cableway (one-way)",
-        "value": 240,
+        "value": 295,
         "format": "currency"
     },
     {
@@ -69,12 +69,187 @@
     },
     {
         "question": "Price of a Checkers rotisserie chicken",
-        "value": 99.99,
+        "value": 119.99,
         "format": "currency"
     },
     {
         "question": "The year Nelson Mandela was released from prison",
         "value": 1990,
+        "format": "number"
+    },
+    {
+        "question": "The year the first democratic election was held in South Africa",
+        "value": 1994,
+        "format": "number"
+    },
+    {
+        "question": "The height of the Carlton Centre in Johannesburg, in metres",
+        "value": 223,
+        "format": "number"
+    },
+    {
+        "question": "Price of a standard boerewors roll at a local market",
+        "value": 40,
+        "format": "currency"
+    },
+    {
+        "question": "The year the vuvuzela became famous worldwide (FIFA World Cup)",
+        "value": 2010,
+        "format": "number"
+    },
+    {
+        "question": "The number of points scored by the Springboks in the 1995 RWC Final",
+        "value": 15,
+        "format": "number"
+    },
+    {
+        "question": "The price of a 1.5-litre bottle of Appletiser",
+        "value": 35.00,
+        "format": "currency"
+    },
+    {
+        "question": "The length of the Garden Route in kilometres",
+        "value": 300,
+        "format": "number"
+    },
+    {
+        "question": "The year the TV show 'Generations' first aired on SABC 1",
+        "value": 1994,
+        "format": "number"
+    },
+    {
+        "question": "The price of a family-size bag of Simba chips",
+        "value": 22.00,
+        "format": "currency"
+    },
+    {
+        "question": "The number of street corners in 'Vicky Sampson - Afrikaner'",
+        "value": 4,
+        "format": "number"
+    },
+    {
+        "question": "The year the movie 'Tsotsi' won an Oscar",
+        "value": 2006,
+        "format": "number"
+    },
+    {
+        "question": "The price of a single trip on the Gautrain from Sandton to OR Tambo",
+        "value": 165,
+        "format": "currency"
+    },
+    {
+        "question": "The number of legs a Parktown prawn has",
+        "value": 6,
+        "format": "number"
+    },
+    {
+        "question": "The year 'Shosholoza' was adopted as a sporting anthem",
+        "value": 1995,
+        "format": "number"
+    },
+    {
+        "question": "The price of a bunny chow in Durban",
+        "value": 80,
+        "format": "currency"
+    },
+    {
+        "question": "The number of cheetahs depicted on the R200 banknote",
+        "value": 1,
+        "format": "number"
+    },
+    {
+        "question": "The year the Union Buildings were completed in Pretoria",
+        "value": 1913,
+        "format": "number"
+    },
+    {
+        "question": "The price of a 500g block of Rama margarine",
+        "value": 30.00,
+        "format": "currency"
+    },
+    {
+        "question": "The number of days Nelson Mandela spent in prison",
+        "value": 10052,
+        "format": "number"
+    },
+    {
+        "question": "The year the first 'Nando's' restaurant opened in Johannesburg",
+        "value": 1987,
+        "format": "number"
+    },
+    {
+        "question": "The price of a ticket to the Apartheid Museum",
+        "value": 150,
+        "format": "currency"
+    },
+    {
+        "question": "The number of official public holidays in South Africa",
+        "value": 12,
+        "format": "number"
+    },
+    {
+        "question": "The year 'Die Antwoord' was formed",
+        "value": 2008,
+        "format": "number"
+    },
+    {
+        "question": "The price of a case of 24 Black Label beers",
+        "value": 300,
+        "format": "currency"
+    },
+    {
+        "question": "The number of rhinos poached in South Africa in 2022",
+        "value": 448,
+        "format": "number"
+    },
+    {
+        "question": "The year the first heart transplant was performed by Christiaan Barnard",
+        "value": 1967,
+        "format": "number"
+    },
+    {
+        "question": "The price of a 1kg bag of mielie-meal",
+        "value": 15.00,
+        "format": "currency"
+    },
+    {
+        "question": "The number of storeys in the Ponte City Apartments building in Johannesburg",
+        "value": 54,
+        "format": "number"
+    },
+    {
+        "question": "The year the song 'Impi' by Juluka was released",
+        "value": 1981,
+        "format": "number"
+    },
+    {
+        "question": "The price of a ticket for the ferry to Robben Island",
+        "value": 400,
+        "format": "currency"
+    },
+    {
+        "question": "The number of medals won by South Africa at the 2016 Rio Olympics",
+        "value": 10,
+        "format": "number"
+    },
+    {
+        "question": "The year the first 'Spur' restaurant opened in Cape Town",
+        "value": 1967,
+        "format": "number"
+    },
+    {
+        "question": "The price of a large Steers Wacky Wednesday deal",
+        "value": 59.90,
+        "format": "currency"
+    },
+    {
+        "question": "The number of Big 5 animals",
+        "value": 5,
+        "format": "number"
+    },
+    {
+        "question": "The year the 'My Octopus Teacher' documentary was released",
+        "value": 2020,
         "format": "number"
     }
   ],
