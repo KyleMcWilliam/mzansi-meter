@@ -204,9 +204,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const actualValue = currentQuestion.value;
-            const offset = (Math.random() * 0.4 + 0.2) * actualValue;
+            let offset;
+
+            if (currentQuestion.format === 'year') {
+                // For years, use a fixed random offset (e.g., 10 to 50 years for a bigger range)
+                offset = Math.floor(Math.random() * 41) + 10; // Random number between 10 and 50
+            } else {
+                // For other formats, use the existing percentage-based offset
+                offset = (Math.random() * 0.4 + 0.2) * actualValue;
+            }
+
             let presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
-            if (presentedNumber <= 0) presentedNumber = actualValue / 2;
+
+            // For years, we should ensure the presented number isn't something weird like year 0 or negative
+            if (currentQuestion.format === 'year' && presentedNumber <= 0) {
+                // If adding the offset made it non-positive, subtracting should be safe
+                presentedNumber = actualValue - offset;
+            } else if (presentedNumber <= 0) {
+                // Fallback for non-year questions that might still result in a non-positive number
+                 presentedNumber = actualValue / 2;
+            }
 
             presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
             questionText.textContent = currentQuestion.question;
