@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- SA Flag Background -->
+    <path d="M0 0H512V170.667H0V0Z" fill="#DE3831"/>
+    <path d="M0 341.333H512V512H0V341.333Z" fill="#0077C8"/>
+    <path d="M0 170.667H512V341.333H0V170.667Z" fill="#FFFFFF"/>
+    <path d="M0 170.667L192 256L0 341.333V170.667Z" fill="#007A4D"/>
+    <path d="M240 256L0 416V96L240 256Z" fill="black"/>
+    <path d="M-28 170.667L164 256L-28 341.333" stroke="#FFB81C" stroke-width="42.667"/>
+    <path d="M512 170.667H0V341.333H512V170.667Z" stroke="white" stroke-width="21.333"/>
+
+    <!-- Meter Dial -->
+    <circle cx="256" cy="256" r="100" fill="#f0f4f8" stroke="#262626" stroke-width="10"/>
+    <path d="M256 256 L 206 170" stroke="#DE3831" stroke-width="10" stroke-linecap="round"/>
+    <path d="M196 316 A 120 120 0 0 1 316 316" stroke="#262626" stroke-width="10" fill="none"/>
+</svg>
