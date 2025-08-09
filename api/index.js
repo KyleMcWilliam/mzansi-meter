@@ -1,16 +1,17 @@
 const functions = require('firebase-functions');
 const express = require('express');
-const generateImageHandler = require('./generate-image.js');
+// const generateImageHandler = require('./generate-image.js'); // Temporarily disabled for debugging
 const getDailySeedHandler = require('./getDailySeed.js');
 
 const app = express();
+const apiRouter = express.Router();
 
-// Route requests to the appropriate handlers
-app.get('/generate-image', generateImageHandler);
-app.get('/getDailySeed', getDailySeedHandler);
+// Setup the routes for the API
+apiRouter.get('/getDailySeed', getDailySeedHandler);
+// apiRouter.get('/generate-image', generateImageHandler); // Temporarily disabled for debugging
 
+// Mount the router under the /api path
+app.use('/api', apiRouter);
 
-// Expose the Express app as a single Cloud Function.
-// This function will be named 'api' because the file is index.js
-// and it's the only export.
+// Expose the Express app as a single Cloud Function named "api".
 exports.api = functions.https.onRequest(app);
