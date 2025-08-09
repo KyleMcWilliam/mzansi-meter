@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const leaderboardScreen = document.getElementById('leaderboard-screen');
 
     const startButton = document.getElementById('start-button');
+    const dailyChallengeButton = document.getElementById('daily-challenge-button');
     const leaderboardButton = document.getElementById('leaderboard-button');
     const gameLeaderboardButton = document.getElementById('game-leaderboard-button');
     const backToStartButton = document.getElementById('back-to-start-button');
@@ -34,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Leaderboard elements
     const leaderboardTitle = document.getElementById('leaderboard-title');
     const leaderboardList = document.getElementById('leaderboard-list');
+    const showDailyLeaderboardButton = document.getElementById('show-daily-leaderboard');
+    const showAllTimeLeaderboardButton = document.getElementById('show-all-time-leaderboard');
     const highscoreInputContainer = document.getElementById('highscore-input-container');
     const playerInitials = document.getElementById('player-initials');
     const submitScoreButton = document.getElementById('submit-score-button');
@@ -56,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let questions = [];
     let availableQuestions = [];
     let currentQuestion = {};
+    let isDailyChallenge = false; // To track game mode
     const QUESTION_TIME = 10000; // 10 seconds in milliseconds
     let questionTimer; // NEW: Timer variable
     let db; // Firebase Firestore instance
@@ -93,15 +97,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function init() {
         highScoreStartDisplay.textContent = highScore;
-        startButton.addEventListener('click', startGame);
-        restartButton.addEventListener('click', startGame);
+        startButton.addEventListener('click', startEndlessGame);
+        dailyChallengeButton.addEventListener('click', startDailyChallenge);
+        restartButton.addEventListener('click', () => {
+            if (isDailyChallenge) {
+                startDailyChallenge();
+            } else {
+                startEndlessGame();
+            }
+        });
         higherButton.addEventListener('click', () => checkAnswer('higher'));
         lowerButton.addEventListener('click', () => checkAnswer('lower'));
         shareButton.addEventListener('click', shareScore);
 
         // New Listeners
-        leaderboardButton.addEventListener('click', () => showLeaderboard('start'));
-        gameLeaderboardButton.addEventListener('click', () => showLeaderboard('game'));
+        leaderboardButton.addEventListener('click', () => showLeaderboard('start', 'all-time'));
+        gameLeaderboardButton.addEventListener('click', () => showLeaderboard('game', 'all-time'));
+        showDailyLeaderboardButton.addEventListener('click', () => showLeaderboard(previousScreen, 'daily'));
+        showAllTimeLeaderboardButton.addEventListener('click', () => showLeaderboard(previousScreen, 'all-time'));
         backToStartButton.addEventListener('click', () => {
             switchScreen(previousScreen);
             if (previousScreen === 'game') {
@@ -112,14 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Game Flow ---
-    function startGame() {
-        currentScore = 0;
-        updateScoreDisplay();
-        // Ensure the correct question set is loaded
-        if (!questions || questions.length === 0) {
-            alert('Error: Questions not loaded. Please refresh the page.');
-            return;
-        }
+    function startEndlessGame() {
+        isDailyChallenge = false;
         availableQuestions = [...questions];
 
         // Shuffle the questions to ensure variety
@@ -132,9 +139,52 @@ document.addEventListener('DOMContentLoaded', () => {
             availableQuestions = availableQuestions.slice(0, 75);
         }
 
+        startGame();
+    }
+
+    async function startDailyChallenge() {
+        isDailyChallenge = true;
+
+        // Show a loading state
+        dailyChallengeButton.disabled = true;
+        dailyChallengeButton.textContent = 'Loading...';
+
+        try {
+            const response = await fetch('/api/getDailySeed');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const dailyIndices = data.dailyQuestions;
+
+            // Create the question list in the correct order
+            availableQuestions = dailyIndices.map(index => questions[index]);
+
+            startGame();
+
+        } catch (error) {
+            console.error('Failed to load daily challenge:', error);
+            alert('Could not load the Daily Challenge. Please try again later.');
+        } finally {
+            // Restore button state
+            dailyChallengeButton.disabled = false;
+            dailyChallengeButton.textContent = 'Daily Challenge';
+        }
+    }
+
+    function startGame() {
+        currentScore = 0;
+        updateScoreDisplay();
+
+        if (!availableQuestions || availableQuestions.length === 0) {
+            alert('Error: Questions not loaded. Please refresh the page.');
+            return;
+        }
+
         switchScreen('game');
         nextQuestion();
     }
+
 
     async function endGame(reason = "Wrong answer!") {
         clearTimeout(questionTimer); // NEW: Stop the timer
@@ -153,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Leaderboard check
         if (db) {
             try {
-                // Fetch the top 10 scores for the selected deck
-                const leaderboardRef = db.collection('leaderboard')
+                const collectionName = isDailyChallenge ? `leaderboard_daily_${getYYYYMMDD()}` : 'leaderboard';
+                const leaderboardRef = db.collection(collectionName)
                                            .orderBy('score', 'desc')
                                            .limit(10);
                 const snapshot = await leaderboardRef.get();
@@ -193,8 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const questionIndex = Math.floor(Math.random() * availableQuestions.length);
-            currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
+            if (isDailyChallenge) {
+                // In Daily Challenge, questions are in order and not removed randomly
+                currentQuestion = availableQuestions.shift();
+            } else {
+                // In Endless Mode, pick a random question
+                const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+                currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
+            }
 
             if (currentQuestion.image) {
                 questionImage.src = currentQuestion.image;
@@ -320,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function showLeaderboard(from) {
+    async function showLeaderboard(from, type = 'all-time') {
         if (from) {
             previousScreen = from;
         }
@@ -328,7 +384,21 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(questionTimer);
         }
         switchScreen('leaderboard');
-        leaderboardTitle.textContent = `Global Leaderboard`;
+
+        let collectionName;
+        if (type === 'daily') {
+            const dateStr = getYYYYMMDD();
+            leaderboardTitle.textContent = `Today's Leaderboard (${dateStr})`;
+            collectionName = `leaderboard_daily_${dateStr}`;
+            showDailyLeaderboardButton.classList.remove('secondary');
+            showAllTimeLeaderboardButton.classList.add('secondary');
+        } else {
+            leaderboardTitle.textContent = 'All-Time Leaderboard';
+            collectionName = 'leaderboard';
+            showAllTimeLeaderboardButton.classList.remove('secondary');
+            showDailyLeaderboardButton.classList.add('secondary');
+        }
+
         leaderboardList.innerHTML = '<li>Loading...</li>';
 
         if (!db) {
@@ -337,14 +407,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Use selectedDeck to query the specific leaderboard, ordering by score
-            const leaderboardRef = db.collection('leaderboard')
+            const leaderboardRef = db.collection(collectionName)
                                        .orderBy('score', 'desc')
                                        .limit(20);
             const snapshot = await leaderboardRef.get();
 
             if (snapshot.empty) {
-                leaderboardList.innerHTML = `<li>Be the first to set a score!</li>`;
+                leaderboardList.innerHTML = `<li>No scores yet. Be the first!</li>`;
                 return;
             }
 
@@ -379,17 +448,28 @@ document.addEventListener('DOMContentLoaded', () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
+        const collectionName = isDailyChallenge ? `leaderboard_daily_${getYYYYMMDD()}` : 'leaderboard';
+
         try {
             if (!db) throw new Error("Firestore is not initialized.");
-            await db.collection('leaderboard').add(scoreData);
+            await db.collection(collectionName).add(scoreData);
             highscoreInputContainer.innerHTML = '<p>Your score has been submitted!</p>';
-            setTimeout(() => showLeaderboard('start'), 1500); // Show updated leaderboard after a delay
+            // After submitting a daily score, show the daily leaderboard
+            setTimeout(() => showLeaderboard('start', isDailyChallenge ? 'daily' : 'all-time'), 1500);
         } catch (error) {
             console.error("Error submitting score:", error);
             alert("There was an error submitting your score. Please try again.");
             submitScoreButton.disabled = false;
             submitScoreButton.textContent = 'Submit';
         }
+    }
+
+    function getYYYYMMDD() {
+        const today = new Date();
+        const year = today.getUTCFullYear();
+        const month = (today.getUTCMonth() + 1).toString().padStart(2, '0');
+        const day = today.getUTCDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
     
     function getGradedTitle(score) {

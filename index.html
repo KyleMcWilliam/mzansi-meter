@@ -25,7 +25,8 @@
                 <p>The SA Guessing Game</p>
             </div>
             <div class="high-score-display">High Score: <span id="high-score-start">0</span></div>
-            <button id="start-button" class="action-button">Start Game</button>
+            <button id="start-button" class="action-button">Endless Mode</button>
+            <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
             <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
             <div class="footer-note">🇿🇦 How lekker is your local knowledge? 🇿🇦</div>
         </div>
@@ -109,7 +110,13 @@
 
         <!-- Leaderboard Screen -->
         <div id="leaderboard-screen" class="screen">
-            <h2 id="leaderboard-title">Global Leaderboard</h2>
+            <div id="leaderboard-header">
+                <h2 id="leaderboard-title">Leaderboard</h2>
+                <div id="leaderboard-toggle-buttons">
+                    <button id="show-daily-leaderboard" class="action-button small">Today's</button>
+                    <button id="show-all-time-leaderboard" class="action-button small secondary">All-Time</button>
+                </div>
+            </div>
             <ol id="leaderboard-list"></ol>
             <button id="back-to-start-button" class="action-button">Back</button>
         </div>
