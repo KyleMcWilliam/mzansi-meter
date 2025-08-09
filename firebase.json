@@ -8,10 +8,18 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "/api{,/**}",
+        "function": "api"
+      },
+      {
+        "source": "!/api{,/**}",
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": {
+    "source": "api",
+    "runtime": "nodejs18"
   },
   "firestore": {
     "rules": "firestore.rules",
