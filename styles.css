@@ -113,6 +113,7 @@ body {
 
 #card-front {
     background-color: var(--bg-color);
+    background-image: radial-gradient(circle, #f8fafd, #f0f4f8);
     border: 2px solid #e9ecef;
     padding: 20px;
     transition: border-color 0.3s ease; /* Smooth transition for border color */
@@ -189,11 +190,40 @@ body {
 #presented-value { font-size: 2.2rem; font-weight: 900; }
 
 #buttons-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-.choice-button { padding: 20px; font-size: 1.5rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.2s ease; background: var(--light-color); border: 3px solid var(--dark-color); }
-.choice-button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.choice-button {
+    padding: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+    background: var(--light-color);
+    border: 3px solid var(--dark-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.choice-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
 .choice-button:active { transform: translateY(0); }
-#higher-button { color: var(--primary-color); border-color: var(--primary-color); }
-#lower-button { color: var(--red-color); border-color: var(--red-color); }
+#higher-button {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background: linear-gradient(145deg, #e6f2ee, #ffffff);
+}
+#higher-button::before {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23007A4D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7l7-7 7 7"/></svg>');
+}
+#lower-button {
+    color: var(--red-color);
+    border-color: var(--red-color);
+    background: linear-gradient(145deg, #fdeeee, #ffffff);
+}
+#lower-button::before {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DE3831" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7l7 7 7-7"/></svg>');
+}
 
 /* --- End Screen --- */
 #final-score-title { font-size: 1.2rem; font-weight: 700; color: #6c757d; margin: 0; }
