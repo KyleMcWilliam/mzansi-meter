@@ -308,6 +308,21 @@ body {
     transform: rotate(45deg);
 }
 
+#how-to-play-modal .modal-content {
+    text-align: left;
+}
+
+#how-to-play-modal h2 {
+    text-align: center;
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+#how-to-play-modal p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
 /* Modal Styles */
 .modal {
     display: none; /* Hidden by default */
