@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function nextQuestion() {
+function nextQuestion() {
         clearTimeout(questionTimer);
         higherButton.disabled = false;
         lowerButton.disabled = false;
@@ -278,9 +278,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const actualValue = currentQuestion.value;
-            const offset = (Math.random() * 0.4 + 0.2) * actualValue;
-            let presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
-            if (presentedNumber <= 0) presentedNumber = actualValue / 2;
+            let offset;
+            let presentedNumber;
+
+            // Check the format of the question to apply the correct logic
+            if (currentQuestion.format === 'year') {
+                // For years, use a smaller, more realistic offset (e.g., 5 to 50 years)
+                offset = Math.floor(Math.random() * 46) + 5; // Random integer between 5 and 50
+
+                // Ensure the presented year isn't nonsensical (e.g., before the year 1000)
+                if (actualValue - offset < 1000) {
+                    presentedNumber = actualValue + offset;
+                } else {
+                    presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
+                }
+            } else {
+                // Original logic for currency and numbers, which works well
+                offset = (Math.random() * 0.4 + 0.2) * actualValue;
+                presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
+                if (presentedNumber <= 0) {
+                    presentedNumber = actualValue / 2;
+                }
+            }
 
             presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
             questionText.textContent = currentQuestion.question;
