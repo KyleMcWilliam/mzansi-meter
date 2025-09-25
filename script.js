@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionImage = document.getElementById('question-image');
 
     const currentScoreDisplay = document.getElementById('current-score');
+    const currentStreakDisplay = document.getElementById('current-streak');
     const finalScoreDisplay = document.getElementById('final-score');
     const highScoreStartDisplay = document.getElementById('high-score-start');
     const gradedTitleDisplay = document.getElementById('graded-title');
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Game State ---
     let currentScore = 0;
+    let currentStreak = 0;
     let highScore = localStorage.getItem('mzansiMeterHighScore') || 0;
     let questions = [];
     let availableQuestions = [];
@@ -192,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startGame() {
         currentScore = 0;
+        currentStreak = 0;
         updateScoreDisplay();
 
         if (!availableQuestions || availableQuestions.length === 0) {
@@ -310,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
             answerPopup.style.backgroundColor = 'rgba(0, 122, 77, 0.95)'; // Green
             currentScore++;
+            currentStreak++;
             updateScoreDisplay();
             triggerConfetti();
             if (navigator.vibrate) navigator.vibrate(50);
@@ -318,6 +322,8 @@ document.addEventListener('DOMContentLoaded', () => {
             cardFront.classList.add('incorrect');
             answerPopup.innerHTML = `Eish! The right answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
             answerPopup.style.backgroundColor = 'rgba(222, 56, 49, 0.95)'; // Red
+            currentStreak = 0;
+            updateScoreDisplay();
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             playWrongAnswerSound();
         }
@@ -392,7 +398,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(`${screen}-screen`).classList.add('active');
     }
 
-    function updateScoreDisplay() { currentScoreDisplay.textContent = currentScore; }
+    function updateScoreDisplay() {
+        currentScoreDisplay.textContent = currentScore;
+        currentStreakDisplay.textContent = currentStreak;
+    }
 
     function updateHighScore() {
         if (currentScore > highScore) {
@@ -499,10 +508,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function getGradedTitle(score) {
+        if (score <= 1) return "Just Landed";
         if (score <= 3) return "Certified Saffa";
+        if (score <= 5) return "Braai Master in Training";
         if (score <= 7) return "Local Legend";
         if (score <= 10) return "You ARE the Potjie!";
-        return "National Treasure!";
+        if (score <= 15) return "Honorary National Treasure";
+        if (score > 15) return "The Real Madiba Magic!";
     }
 
     function playWrongAnswerSound() {
