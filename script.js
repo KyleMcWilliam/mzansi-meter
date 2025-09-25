@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareButton = document.getElementById('share-button');
     const higherButton = document.getElementById('higher-button');
     const lowerButton = document.getElementById('lower-button');
+    const howToPlayButton = document.getElementById('how-to-play-button');
+    const howToPlayModal = document.getElementById('how-to-play-modal');
+    const closeModalButton = howToPlayModal.querySelector('.close-button');
 
     const questionText = document.getElementById('question-text');
     const presentedValue = document.getElementById('presented-value');
@@ -122,6 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         submitScoreButton.addEventListener('click', submitScore);
+
+        // How to Play Modal Listeners
+        howToPlayButton.addEventListener('click', () => {
+            howToPlayModal.style.display = 'block';
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            howToPlayModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == howToPlayModal) {
+                howToPlayModal.style.display = 'none';
+            }
+        });
     }
 
     // --- Game Flow ---
@@ -355,10 +373,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- UI & Helpers ---
     function formatValue(value, format) {
-        if (format === 'currency') {
-            return `R${value.toFixed(2)}`;
+        switch (format) {
+            case 'currency':
+                // Format as currency with two decimal places and comma separators.
+                return `R${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            case 'number':
+                 // Format with comma separators for thousands.
+                return Math.round(value).toLocaleString('en-US');
+            case 'year':
+            default:
+                // Years and other formats don't need special formatting.
+                return Math.round(value);
         }
-        return Math.round(value);
     }
     
     function switchScreen(screen) {
