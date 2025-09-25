@@ -575,25 +575,23 @@ function nextQuestion() {
     async function shareScore() {
         const score = currentScore;
         const title = getGradedTitle(score);
+        updateOgTags(score, title); // This part is perfect as is
 
-        // Dynamically update the page's OG tags
-        updateOgTags(score, title);
-
-        const shareText = `I scored ${score} on The Mzansi Meter and they call me "${title}"! Think you can do better, boet? #MzansiMeter 🇿🇦`;
+        const shareText = `I scored ${score} on The Mzansi Meter and earned the title "${title}"! 🇿🇦 Think you know SA better? Prove it, boet! #MzansiMeter`;
 
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'The Mzansi Meter',
+                    title: 'The Mzansi Meter Challenge',
                     text: shareText,
-                    url: window.location.href // This URL now contains the rich OG tags
+                    url: window.location.href
                 });
             } catch (error) {
                 console.error('Error sharing:', error);
-                copyToClipboard(shareText); // Fallback to clipboard
+                copyToClipboard(shareText);
             }
         } else {
-            copyToClipboard(shareText); // Fallback for browsers that don't support navigator.share
+            copyToClipboard(shareText);
         }
     }
 
