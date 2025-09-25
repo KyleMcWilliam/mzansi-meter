@@ -149,7 +149,7 @@ body {
 }
 
 #card-back .logo span {
-    color: var(--secondary-color);
+    color: var(--light-color); /* Changed from secondary-color for better contrast */
 }
 
 /* NEW: Timer Styles */
@@ -288,6 +288,10 @@ body {
 .action-button:hover { background-color: #005a3a; }
 .action-button.secondary { background-color: var(--dark-color); }
 .action-button.secondary:hover { background-color: #1a1a1a; }
+
+#leaderboard-toggle-buttons button.secondary:hover {
+    background-color: #1a1a1a; /* Darken the secondary button on hover */
+}
 
 /* --- Feedback Animations --- */
 .correct-answer { animation: correctAnswer 0.5s ease; }
