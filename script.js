@@ -240,6 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show input if the user's score is high enough
                 if (currentScore > 0 && (scores.length < 10 || currentScore > lowestScoreOnLeaderboard)) {
                     highscoreInputContainer.style.display = 'block';
+                    const savedInitials = localStorage.getItem('mzansiMeterInitials');
+                    if (savedInitials) {
+                        playerInitials.value = savedInitials;
+                    }
                 } else {
                     highscoreInputContainer.style.display = 'none';
                 }
@@ -329,6 +333,7 @@ function nextQuestion() {
 
         if (isCorrect) {
             // --- CORRECT ANSWER ---
+            document.getElementById('correct-answer-sound').play();
             cardFront.classList.add('correct');
             answerPopup.innerHTML = `Correct!<br>The answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
             answerPopup.style.backgroundColor = 'rgba(0, 122, 77, 0.95)'; // Green
@@ -456,7 +461,7 @@ function nextQuestion() {
             showDailyLeaderboardButton.classList.add('secondary');
         }
 
-        leaderboardList.innerHTML = '<li>Loading...</li>';
+        leaderboardList.innerHTML = '<li><div class="loader"></div></li>';
 
         if (!db) {
             leaderboardList.innerHTML = '<li>Error: Leaderboard is not available.</li>';
@@ -495,6 +500,8 @@ function nextQuestion() {
             alert("Please enter your 3 initials.");
             return;
         }
+
+        localStorage.setItem('mzansiMeterInitials', name);
 
         submitScoreButton.disabled = true;
         submitScoreButton.textContent = 'Submitting...';
