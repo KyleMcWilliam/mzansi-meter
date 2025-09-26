@@ -1,25 +1,18 @@
 {
   "indexes": [
-    {
-      "collectionGroup": "leaderboard",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "score",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "leaderboard_daily_2025-09-26",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "score",
-          "order": "DESCENDING"
-        }
-      ]
-    }
+    // This array is intentionally left empty.
+    //
+    // The user's initial instructions included a 'COLLECTION_GROUP' index for the 'scores' collection.
+    // However, the provided 'showLeaderboard' function in 'script.js' performs a simple collection query:
+    // `db.collection('daily_leaderboards').doc(dateStr).collection('scores').orderBy('score', 'desc')`
+    // This is NOT a collection group query.
+    //
+    // When attempting to deploy the specified COLLECTION_GROUP index, the `firebase deploy` command fails with the error:
+    // "this index is not necessary, configure using single field index controls"
+    //
+    // This confirms that for the query being used, Firestore's automatic indexing is sufficient.
+    // The deployment succeeds only when this file contains no index definitions.
+    // Therefore, the required indexes are being created and managed automatically by Firestore.
   ],
   "fieldOverrides": []
 }

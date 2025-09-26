@@ -436,93 +436,99 @@ function nextQuestion() {
         }
     }
 
-    async function showLeaderboard(from, type = 'all-time') {
-        if (from) {
-            previousScreen = from;
-        }
-        if (previousScreen === 'game') {
-            clearTimeout(questionTimer);
-        }
-        switchScreen('leaderboard');
+async function showLeaderboard(from, type = 'all-time') {
+    if (from) {
+        previousScreen = from;
+    }
+    if (previousScreen === 'game') {
+        clearTimeout(questionTimer);
+    }
+    switchScreen('leaderboard');
+    leaderboardList.innerHTML = '<li><div class="loader"></div></li>';
 
-        let collectionName;
-        if (type === 'daily') {
+    if (!db) {
+        leaderboardList.innerHTML = '<li>Error: Leaderboard is not available.</li>';
+        return;
+    }
+
+    let leaderboardRef;
+
+    if (type === 'daily') {
+        const dateStr = getYYYYMMDD();
+        leaderboardTitle.textContent = `Today's Leaderboard (${dateStr})`;
+        leaderboardRef = db.collection('daily_leaderboards').doc(dateStr).collection('scores')
+                           .orderBy('score', 'desc')
+                           .limit(20);
+        showDailyLeaderboardButton.classList.remove('secondary');
+        showAllTimeLeaderboardButton.classList.add('secondary');
+    } else {
+        leaderboardTitle.textContent = 'All-Time Leaderboard';
+        leaderboardRef = db.collection('leaderboard')
+                           .orderBy('score', 'desc')
+                           .limit(20);
+        showAllTimeLeaderboardButton.classList.remove('secondary');
+        showDailyLeaderboardButton.classList.add('secondary');
+    }
+
+    try {
+        const snapshot = await leaderboardRef.get();
+
+        if (snapshot.empty) {
+            leaderboardList.innerHTML = `<li>No scores yet. Be the first!</li>`;
+            return;
+        }
+
+        leaderboardList.innerHTML = ''; // Clear loading message
+        let rank = 1;
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${rank}. ${data.name}</span><span>${data.score}</span>`;
+            leaderboardList.appendChild(li);
+            rank++;
+        });
+    } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        leaderboardList.innerHTML = '<li>Could not load leaderboard. This might be a temporary issue. Please try again later.</li>';
+    }
+}
+
+async function submitScore() {
+    const name = playerInitials.value.trim().toUpperCase();
+    if (!name || name.length < 3) {
+        alert("Please enter your 3 initials.");
+        return;
+    }
+    localStorage.setItem('mzansiMeterInitials', name);
+
+    submitScoreButton.disabled = true;
+    submitScoreButton.textContent = 'Submitting...';
+
+    const scoreData = {
+        name: name,
+        score: currentScore,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        if (!db) throw new Error("Firestore is not initialized.");
+
+        if (isDailyChallenge) {
             const dateStr = getYYYYMMDD();
-            leaderboardTitle.textContent = `Today's Leaderboard (${dateStr})`;
-            collectionName = `leaderboard_daily_${dateStr}`;
-            showDailyLeaderboardButton.classList.remove('secondary');
-            showAllTimeLeaderboardButton.classList.add('secondary');
+            await db.collection('daily_leaderboards').doc(dateStr).collection('scores').add(scoreData);
         } else {
-            leaderboardTitle.textContent = 'All-Time Leaderboard';
-            collectionName = 'leaderboard';
-            showAllTimeLeaderboardButton.classList.remove('secondary');
-            showDailyLeaderboardButton.classList.add('secondary');
+            await db.collection('leaderboard').add(scoreData);
         }
 
-        leaderboardList.innerHTML = '<li>Loading...</li>';
-
-        if (!db) {
-            leaderboardList.innerHTML = '<li>Error: Leaderboard is not available.</li>';
-            return;
-        }
-
-        try {
-            const leaderboardRef = db.collection(collectionName)
-                                       .orderBy('score', 'desc')
-                                       .limit(20);
-            const snapshot = await leaderboardRef.get();
-
-            if (snapshot.empty) {
-                leaderboardList.innerHTML = `<li>No scores yet. Be the first!</li>`;
-                return;
-            }
-
-            leaderboardList.innerHTML = ''; // Clear loading message
-            let rank = 1;
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const li = document.createElement('li');
-                li.innerHTML = `<span>${rank}. ${data.name}</span><span>${data.score}</span>`;
-                leaderboardList.appendChild(li);
-                rank++;
-            });
-        } catch (error) {
-            console.error("Error fetching leaderboard:", error);
-            leaderboardList.innerHTML = '<li>Could not load leaderboard. This might be a temporary issue. Please try again later.</li>';
-        }
+        highscoreInputContainer.innerHTML = '<p>Your score has been submitted!</p>';
+        setTimeout(() => showLeaderboard('start', isDailyChallenge ? 'daily' : 'all-time'), 1500);
+    } catch (error) {
+        console.error("Error submitting score:", error);
+        alert("There was an error submitting your score. Please try again.");
+        submitScoreButton.disabled = false;
+        submitScoreButton.textContent = 'Submit';
     }
-
-    async function submitScore() {
-        const name = playerInitials.value.trim().toUpperCase();
-        if (!name || name.length < 3) {
-            alert("Please enter your 3 initials.");
-            return;
-        }
-
-        submitScoreButton.disabled = true;
-        submitScoreButton.textContent = 'Submitting...';
-
-        const scoreData = {
-            name: name,
-            score: currentScore,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        const collectionName = isDailyChallenge ? `leaderboard_daily_${getYYYYMMDD()}` : 'leaderboard';
-
-        try {
-            if (!db) throw new Error("Firestore is not initialized.");
-            await db.collection(collectionName).add(scoreData);
-            highscoreInputContainer.innerHTML = '<p>Your score has been submitted!</p>';
-            // After submitting a daily score, show the daily leaderboard
-            setTimeout(() => showLeaderboard('start', isDailyChallenge ? 'daily' : 'all-time'), 1500);
-        } catch (error) {
-            console.error("Error submitting score:", error);
-            alert("There was an error submitting your score. Please try again.");
-            submitScoreButton.disabled = false;
-            submitScoreButton.textContent = 'Submit';
-        }
-    }
+}
 
     function getYYYYMMDD() {
         const today = new Date();
