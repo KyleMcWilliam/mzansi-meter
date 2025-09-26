@@ -272,6 +272,7 @@ function nextQuestion() {
                 const questionIndex = Math.floor(Math.random() * availableQuestions.length);
                 currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
             }
+            window.currentQuestion = currentQuestion; // Expose for testing
 
             if (currentQuestion.image) {
                 questionImage.src = currentQuestion.image;
@@ -338,6 +339,7 @@ function nextQuestion() {
             if (navigator.vibrate) navigator.vibrate(50);
         } else {
             // --- INCORRECT ANSWER ---
+            card.classList.add('shake');
             cardFront.classList.add('incorrect');
             answerPopup.innerHTML = `Eish! The right answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
             answerPopup.style.backgroundColor = 'rgba(222, 56, 49, 0.95)'; // Red
@@ -354,6 +356,7 @@ function nextQuestion() {
         setTimeout(() => {
             answerPopup.classList.remove('show');
             cardFront.classList.remove('correct', 'incorrect');
+            card.classList.remove('shake'); // Remove shake after animation
 
             if (isCorrect) {
                 nextQuestion();
