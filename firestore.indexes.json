@@ -12,7 +12,7 @@
     },
     {
       "collectionGroup": "leaderboard_daily_2025-09-26",
-      "queryScope": "COLLECTION_GROUP",
+      "queryScope": "COLLECTION",
       "fields": [
         {
           "fieldPath": "score",
