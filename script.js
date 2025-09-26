@@ -170,15 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
         dailyChallengeButton.textContent = 'Loading...';
 
         try {
-            const response = await fetch('/api/getDailySeed');
+            // Fetch the 10 daily questions directly from the new endpoint
+            const response = await fetch('/api/getDailyQuestions');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.json();
-            const dailyIndices = data.dailyQuestions;
+            // The response is the array of questions itself
+            availableQuestions = await response.json();
 
-            // Create the question list in the correct order
-            availableQuestions = dailyIndices.map(index => questions[index]);
+            // Preload the first couple of images for a smoother experience
+            preloadImages();
 
             startGame();
 
@@ -382,6 +383,17 @@ function nextQuestion() {
             origin: origin,
             colors: ['#007A4D', '#FFB612', '#262626'] // Green, Gold, Black
         });
+    }
+
+    function preloadImages() {
+        // Preload images for the first two questions to prevent pop-in
+        const questionsToPreload = availableQuestions.slice(0, 2);
+        for (const question of questionsToPreload) {
+            if (question.image) {
+                const img = new Image();
+                img.src = question.image;
+            }
+        }
     }
 
     // --- NEW: Timer Functions ---
