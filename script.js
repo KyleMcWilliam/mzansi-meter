@@ -252,66 +252,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 function nextQuestion() {
-        clearTimeout(questionTimer);
-        higherButton.disabled = false;
-        lowerButton.disabled = false;
+    clearTimeout(questionTimer);
+    higherButton.disabled = false;
+    lowerButton.disabled = false;
 
-        card.classList.add('is-flipped');
+    card.classList.add('is-flipped');
 
-        setTimeout(() => {
-            if (availableQuestions.length === 0) {
-                endGame("You answered all the questions!");
-                return;
-            }
+    setTimeout(() => {
+        if (availableQuestions.length === 0) {
+            endGame("You answered all the questions!");
+            return;
+        }
 
-            if (isDailyChallenge) {
-                // In Daily Challenge, questions are in order and not removed randomly
-                currentQuestion = availableQuestions.shift();
-            } else {
-                // In Endless Mode, pick a random question
-                const questionIndex = Math.floor(Math.random() * availableQuestions.length);
-                currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
-            }
-            window.currentQuestion = currentQuestion; // Expose for testing
+        if (isDailyChallenge) {
+            currentQuestion = availableQuestions.shift();
+        } else {
+            const questionIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions.splice(questionIndex, 1)[0];
+        }
 
-            if (currentQuestion.image) {
-                questionImage.src = currentQuestion.image;
-                questionImageContainer.style.display = 'block';
-            } else {
-                questionImageContainer.style.display = 'none';
-            }
+        if (currentQuestion.image) {
+            questionImage.src = currentQuestion.image;
+            questionImageContainer.style.display = 'block';
+        } else {
+            questionImageContainer.style.display = 'none';
+        }
 
-            const actualValue = currentQuestion.value;
+        const actualValue = currentQuestion.value;
+        let presentedNumber;
+
+        // This loop ensures the presented value is never the same as the actual value after formatting.
+        do {
             let offset;
-            let presentedNumber;
-
-            // Check the format of the question to apply the correct logic
             if (currentQuestion.format === 'year') {
-                // For years, use a smaller, more realistic offset (e.g., 5 to 50 years)
-                offset = Math.floor(Math.random() * 46) + 5; // Random integer between 5 and 50
-
-                // Ensure the presented year isn't nonsensical (e.g., before the year 1000)
+                offset = Math.floor(Math.random() * 46) + 5;
                 if (actualValue - offset < 1000) {
                     presentedNumber = actualValue + offset;
                 } else {
                     presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
                 }
             } else {
-                // Original logic for currency and numbers, which works well
                 offset = (Math.random() * 0.4 + 0.2) * actualValue;
                 presentedNumber = Math.random() < 0.5 ? actualValue + offset : actualValue - offset;
                 if (presentedNumber <= 0) {
                     presentedNumber = actualValue / 2;
                 }
             }
+            // Temporarily format to check for collision before assigning to the DOM
+            const formattedPresentedValue = formatValue(presentedNumber, currentQuestion.format);
+            const formattedActualValue = formatValue(actualValue, currentQuestion.format);
 
-            presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
-            questionText.textContent = currentQuestion.question;
+            if (formattedPresentedValue !== formattedActualValue) {
+                break; // The values are different, we can exit the loop.
+            }
+        } while (true);
 
-            card.classList.remove('is-flipped');
-            startTimer();
-        }, 300); // Halfway through the 0.6s flip
-    }
+
+        presentedValue.textContent = formatValue(presentedNumber, currentQuestion.format);
+        questionText.textContent = currentQuestion.question;
+
+        card.classList.remove('is-flipped');
+        startTimer();
+    }, 300); // Halfway through the 0.6s flip
+}
 
     // --- Answer Logic ---
     function checkAnswer(guess) {
