@@ -385,8 +385,12 @@ function nextQuestion() {
         });
     }
 
+    /**
+     * Preloads the images for the first two questions in the daily challenge queue.
+     * This is a performance optimization to prevent a visual "pop-in" of the image
+     * when the question appears, creating a smoother user experience.
+     */
     function preloadImages() {
-        // Preload images for the first two questions to prevent pop-in
         const questionsToPreload = availableQuestions.slice(0, 2);
         for (const question of questionsToPreload) {
             if (question.image) {

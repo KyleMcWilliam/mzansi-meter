@@ -1,21 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
-// A simple pseudo-random number generator (PRNG) using the LCG formula
+/**
+ * Creates a seeded pseudo-random number generator (PRNG).
+ * This ensures that for the same seed (the day's date), the sequence of random numbers will be identical.
+ * This is crucial for making the daily challenge predictable and the same for all users.
+ * @param {number} seed - The seed to initialize the random number generator.
+ * @returns {function(): number} A function that returns a new random number between 0 and 1 each time it's called.
+ */
 function createSeededRandom(seed) {
     let state = seed;
-    // LCG parameters
+    // These are standard parameters for a Linear Congruential Generator (LCG).
     const a = 1664525;
     const c = 1013904223;
-    const m = 2 ** 32;
+    const m = 2 ** 32; // 2^32
 
     return function() {
         state = (a * state + c) % m;
-        return state / m;
+        return state / m; // Normalize to a value between 0 and 1
     };
 }
 
-// Fisher-Yates shuffle algorithm to shuffle an array based on a seeded PRNG
+/**
+ * Shuffles an array in a deterministic way using a seeded random number generator.
+ * This implements the Fisher-Yates (or Knuth) shuffle algorithm.
+ * @param {Array<any>} array - The array to be shuffled.
+ * @param {function(): number} seededRandom - The seeded PRNG function to use for shuffling.
+ * @returns {Array<any>} The shuffled array.
+ */
 function shuffleArray(array, seededRandom) {
     let m = array.length, t, i;
 
