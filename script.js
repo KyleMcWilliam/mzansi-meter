@@ -225,11 +225,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Leaderboard check
         if (db) {
             try {
-                const collectionName = isDailyChallenge ? `leaderboard_daily_${getYYYYMMDD()}` : 'leaderboard';
-                const leaderboardRef = db.collection(collectionName)
+                let leaderboardQuery;
+                if (isDailyChallenge) {
+                    const dateStr = getYYYYMMDD();
+                    leaderboardQuery = db.collection('leaderboard_daily')
+                                           .where('date', '==', dateStr)
                                            .orderBy('score', 'desc')
                                            .limit(10);
-                const snapshot = await leaderboardRef.get();
+                } else {
+                    leaderboardQuery = db.collection('leaderboard')
+                                           .orderBy('score', 'desc')
+                                           .limit(10);
+                }
+                const snapshot = await leaderboardQuery.get();
 
                 const scores = [];
                 snapshot.forEach(doc => {
@@ -461,20 +469,6 @@ function nextQuestion() {
         }
         switchScreen('leaderboard');
 
-        let collectionName;
-        if (type === 'daily') {
-            const dateStr = getYYYYMMDD();
-            leaderboardTitle.textContent = `Today's Leaderboard (${dateStr})`;
-            collectionName = `leaderboard_daily_${dateStr}`;
-            showDailyLeaderboardButton.classList.remove('secondary');
-            showAllTimeLeaderboardButton.classList.add('secondary');
-        } else {
-            leaderboardTitle.textContent = 'All-Time Leaderboard';
-            collectionName = 'leaderboard';
-            showAllTimeLeaderboardButton.classList.remove('secondary');
-            showDailyLeaderboardButton.classList.add('secondary');
-        }
-
         leaderboardList.innerHTML = '<li>Loading...</li>';
 
         if (!db) {
@@ -482,11 +476,27 @@ function nextQuestion() {
             return;
         }
 
+        let query;
+        if (type === 'daily') {
+            const dateStr = getYYYYMMDD();
+            leaderboardTitle.textContent = `Today's Leaderboard (${dateStr})`;
+            query = db.collection('leaderboard_daily')
+                      .where('date', '==', dateStr)
+                      .orderBy('score', 'desc')
+                      .limit(20);
+            showDailyLeaderboardButton.classList.remove('secondary');
+            showAllTimeLeaderboardButton.classList.add('secondary');
+        } else {
+            leaderboardTitle.textContent = 'All-Time Leaderboard';
+            query = db.collection('leaderboard')
+                      .orderBy('score', 'desc')
+                      .limit(20);
+            showAllTimeLeaderboardButton.classList.remove('secondary');
+            showDailyLeaderboardButton.classList.add('secondary');
+        }
+
         try {
-            const leaderboardRef = db.collection(collectionName)
-                                       .orderBy('score', 'desc')
-                                       .limit(20);
-            const snapshot = await leaderboardRef.get();
+            const snapshot = await query.get();
 
             if (snapshot.empty) {
                 leaderboardList.innerHTML = `<li>No scores yet. Be the first!</li>`;
@@ -524,7 +534,11 @@ function nextQuestion() {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        const collectionName = isDailyChallenge ? `leaderboard_daily_${getYYYYMMDD()}` : 'leaderboard';
+        let collectionName = 'leaderboard';
+        if (isDailyChallenge) {
+            collectionName = 'leaderboard_daily';
+            scoreData.date = getYYYYMMDD(); // Add date for daily scores
+        }
 
         try {
             if (!db) throw new Error("Firestore is not initialized.");

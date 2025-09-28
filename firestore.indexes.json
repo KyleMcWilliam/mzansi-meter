@@ -11,9 +11,13 @@
       ]
     },
     {
-      "collectionGroup": "leaderboard_daily_2025-09-26",
+      "collectionGroup": "leaderboard_daily",
       "queryScope": "COLLECTION",
       "fields": [
+        {
+          "fieldPath": "date",
+          "order": "DESCENDING"
+        },
         {
           "fieldPath": "score",
           "order": "DESCENDING"

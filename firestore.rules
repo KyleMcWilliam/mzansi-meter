@@ -11,13 +11,15 @@ service cloud.firestore {
                        request.resource.data.score >= 0;
     }
 
-    // Allow public read access and validated writes to daily leaderboards
-    match /leaderboard_daily_{date}/{docId} {
+    // Allow public read access and validated writes to the single daily leaderboard collection
+    match /leaderboard_daily/{docId} {
         allow read: if true;
         allow create: if request.resource.data.name is string &&
                          request.resource.data.name.size() <= 3 &&
                          request.resource.data.score is number &&
-                         request.resource.data.score >= 0;
+                         request.resource.data.score >= 0 &&
+                         request.resource.data.date is string &&
+                         request.resource.data.date.matches('^\\d{4}-\\d{2}-\\d{2}$');
     }
   }
 }
