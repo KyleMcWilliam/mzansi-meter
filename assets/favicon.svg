@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#DE3831;stop-opacity:1" /> <!-- Red -->
+      <stop offset="50%" style="stop-color:#FFB612;stop-opacity:1" /> <!-- Yellow/Gold -->
+      <stop offset="100%" style="stop-color:#007A4D;stop-opacity:1" /> <!-- Green -->
+    </linearGradient>
+  </defs>
+
+  <!-- Gauge Background Arc -->
+  <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#grad)" stroke-width="12" stroke-linecap="round" />
+
+  <!-- Needle Base -->
+  <circle cx="50" cy="50" r="6" fill="#262626" />
+
+  <!-- Needle -->
+  <path d="M 50 50 L 25 30" stroke="#262626" stroke-width="4" stroke-linecap="round" />
+
+  <!-- South African "Y" shape hint in the center or background? Maybe keep it simple for a favicon. -->
+  <!-- Let's just stick to the gauge for clarity at small sizes. -->
+</svg>
