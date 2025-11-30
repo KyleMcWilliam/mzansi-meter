@@ -68,7 +68,14 @@ module.exports = async (req, res) => {
         // --- End of seeding logic ---
 
         // 3. Read the questions file
-        const questionsPath = path.join(__dirname, '..', 'questions.json');
+        // Try multiple paths to ensure robustness in different environments (Vercel, local, etc.)
+        let questionsPath = path.join(process.cwd(), 'questions.json');
+
+        // Fallback for local development if process.cwd() is not the root
+        if (!fs.existsSync(questionsPath)) {
+            questionsPath = path.join(__dirname, '..', 'questions.json');
+        }
+
         const questionsData = fs.readFileSync(questionsPath, 'utf8');
         const allQuestions = JSON.parse(questionsData);
         const totalQuestions = allQuestions.length;
