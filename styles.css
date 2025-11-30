@@ -508,3 +508,110 @@ body {
         gap: 5px;
     }
 }
+/* --- Toast Notifications --- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none; /* Allow clicks to pass through container */
+}
+
+.toast {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 0.95rem;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.error {
+    background-color: var(--red-color);
+}
+
+.toast.success {
+    background-color: var(--primary-color);
+}
+
+.toast.info {
+    background-color: var(--blue-color);
+}
+
+/* --- Mute Button --- */
+.icon-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    padding: 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,255,255,0.8);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.icon-button:hover {
+    transform: scale(1.1);
+    background-color: rgba(255,255,255,1);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* Position adjustment for mobile if needed */
+@media (max-width: 380px) {
+    .icon-button {
+        top: 15px;
+        right: 15px;
+        font-size: 1.2rem;
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* --- Lives Display --- */
+#lives-display {
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    margin-right: 15px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+}
+
+.game-header {
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    justify-content: center; /* Center items */
+    gap: 10px;
+}
+
+/* --- UI Polish --- */
+#game-leaderboard-button {
+    margin-bottom: 10px;
+}
