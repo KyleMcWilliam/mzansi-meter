@@ -141,13 +141,13 @@ body {
     padding: 10px 16px;
     font-size: 0.85rem;
     width: auto;
-    margin-bottom: 0;
+    margin-bottom: 15px;
     border-radius: 8px;
 }
 
 #card {
     width: 100%;
-    min-height: 380px; /* Slightly taller */
+    min-height: 450px; /* Taller to prevent squashed content */
     margin-bottom: 25px;
     position: relative;
 }
@@ -156,7 +156,7 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 380px;
+    min-height: 450px;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
 }
@@ -723,4 +723,15 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
+    padding-right: 60px; /* Prevent overlap with mute button */
+    align-items: center;
+}
+
+@media (max-width: 400px) {
+    #lives-display {
+        font-size: 1.2rem;
+    }
+    #score-streak {
+        font-size: 0.9rem;
+    }
 }
