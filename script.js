@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const currentScoreDisplay = document.getElementById('current-score');
     const currentStreakDisplay = document.getElementById('current-streak');
+    const livesDisplay = document.getElementById('lives-display'); // NEW
     const finalScoreDisplay = document.getElementById('final-score');
     const highScoreStartDisplay = document.getElementById('high-score-start');
     const gradedTitleDisplay = document.getElementById('graded-title');
@@ -49,6 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealQuestionText = document.getElementById('reveal-question-text');
     const revealCorrectAnswer = document.getElementById('reveal-correct-answer');
 
+    // NEW: Mute Button
+    const muteButton = document.getElementById('mute-button');
+    let isMuted = localStorage.getItem('mzansiMeterMuted') === 'true';
+
     const hadedaSound = document.getElementById('wrong-answer-hadeda');
     const taxiSound = document.getElementById('wrong-answer-taxi');
     const confettiCanvas = document.getElementById('confetti-canvas');
@@ -60,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Game State ---
     let currentScore = 0;
     let currentStreak = 0;
+    let lives = 3; // NEW
     let highScore = localStorage.getItem('mzansiMeterHighScore') || 0;
     let questions = [];
     let availableQuestions = [];
@@ -87,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         db = firebase.firestore();
     } catch (e) {
         console.error("Firebase initialization failed:", e);
-        alert("Could not connect to the leaderboard. Please check the console for details.");
+        showToast("Could not connect to the leaderboard. Please check the console for details.", 'error');
     }
 
 
@@ -101,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function init() {
+        updateMuteButton(); // Set initial state
         highScoreStartDisplay.textContent = highScore;
         startButton.addEventListener('click', startEndlessGame);
         dailyChallengeButton.addEventListener('click', startDailyChallenge);
@@ -142,6 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 howToPlayModal.style.display = 'none';
             }
         });
+
+        // Mute Toggle Listener
+        muteButton.addEventListener('click', toggleMute);
     }
 
     // --- Game Flow ---
@@ -185,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Failed to load daily challenge:', error);
-            alert('Could not load the Daily Challenge. Please try again later.');
+            showToast('Could not load the Daily Challenge. Please try again later.', 'error');
         } finally {
             // Restore button state
             dailyChallengeButton.disabled = false;
@@ -196,10 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function startGame() {
         currentScore = 0;
         currentStreak = 0;
+        lives = 3; // Reset lives
         updateScoreDisplay();
+        updateLivesDisplay(); // Update lives UI
 
         if (!availableQuestions || availableQuestions.length === 0) {
-            alert('Error: Questions not loaded. Please refresh the page.');
+            showToast('Error: Questions not loaded. Please refresh the page.', 'error');
             return;
         }
 
@@ -355,8 +367,13 @@ function nextQuestion() {
             cardFront.classList.add('incorrect');
             answerPopup.innerHTML = `Eish! The right answer was ${formatValue(currentQuestion.value, currentQuestion.format)}`;
             answerPopup.style.backgroundColor = 'rgba(222, 56, 49, 0.95)'; // Red
+
+            // Lives Logic
+            lives--;
             currentStreak = 0;
             updateScoreDisplay();
+            updateLivesDisplay();
+
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             playWrongAnswerSound();
         }
@@ -373,7 +390,12 @@ function nextQuestion() {
             if (isCorrect) {
                 nextQuestion();
             } else {
-                endGame(`Eish, you got it wrong!`);
+                if (lives > 0) {
+                    showToast(`Eish! That was wrong. You have ${lives} lives left.`, 'error');
+                    nextQuestion();
+                } else {
+                    endGame(`Eish, you're out of lives!`);
+                }
             }
         }, 1500);
     }
@@ -422,7 +444,23 @@ function nextQuestion() {
         timerBar.style.transform = 'scaleX(0)';
 
         // Set timeout for game over
-        questionTimer = setTimeout(() => endGame("Time's up, my bru!"), QUESTION_TIME);
+        questionTimer = setTimeout(() => handleTimeUp(), QUESTION_TIME);
+    }
+
+    function handleTimeUp() {
+        lives--;
+        currentStreak = 0;
+        updateScoreDisplay();
+        updateLivesDisplay();
+
+        playWrongAnswerSound();
+
+        if (lives > 0) {
+            showToast("Time's up! You lost a life.", 'error');
+            nextQuestion();
+        } else {
+            endGame("Time's up, my bru! Game over.");
+        }
     }
 
 
@@ -450,6 +488,14 @@ function nextQuestion() {
     function updateScoreDisplay() {
         currentScoreDisplay.textContent = currentScore;
         currentStreakDisplay.textContent = currentStreak;
+    }
+
+    function updateLivesDisplay() {
+        let hearts = '';
+        for (let i = 0; i < lives; i++) {
+            hearts += '❤️';
+        }
+        livesDisplay.textContent = hearts;
     }
 
     function updateHighScore() {
@@ -521,7 +567,7 @@ function nextQuestion() {
     async function submitScore() {
         const name = playerInitials.value.trim().toUpperCase();
         if (!name || name.length < 3) {
-            alert("Please enter your 3 initials.");
+            showToast("Please enter your 3 initials.", 'info');
             return;
         }
 
@@ -548,7 +594,7 @@ function nextQuestion() {
             setTimeout(() => showLeaderboard('start', isDailyChallenge ? 'daily' : 'all-time'), 1500);
         } catch (error) {
             console.error("Error submitting score:", error);
-            alert("There was an error submitting your score. Please try again.");
+            showToast("There was an error submitting your score. Please try again.", 'error');
             submitScoreButton.disabled = false;
             submitScoreButton.textContent = 'Submit';
         }
@@ -573,8 +619,25 @@ function nextQuestion() {
     }
 
     function playWrongAnswerSound() {
+        if (isMuted) return;
         if (Math.random() > 0.5) hadedaSound.play();
         else taxiSound.play();
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        localStorage.setItem('mzansiMeterMuted', isMuted);
+        updateMuteButton();
+    }
+
+    function updateMuteButton() {
+        if (isMuted) {
+            muteButton.textContent = '🔇';
+            muteButton.setAttribute('aria-label', 'Unmute Sound');
+        } else {
+            muteButton.textContent = '🔊';
+            muteButton.setAttribute('aria-label', 'Mute Sound');
+        }
     }
 
     function updateOgTags(score, title) {
@@ -633,8 +696,37 @@ function nextQuestion() {
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert("Score copied to clipboard! Now go and brag on social media.");
+            showToast("Score copied to clipboard! Now go and brag on social media.", 'success');
         }).catch(err => { console.error('Failed to copy: ', err); });
+    }
+
+    // --- Toast Notification System ---
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        let icon = '';
+        if (type === 'success') icon = '✅';
+        else if (type === 'error') icon = '❌';
+        else icon = 'ℹ️';
+
+        toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+
+        container.appendChild(toast);
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                container.removeChild(toast);
+            }, 300); // Wait for transition to finish
+        }, 3000);
     }
 
 });
