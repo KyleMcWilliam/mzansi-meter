@@ -82,6 +82,9 @@ body {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     backdrop-filter: blur(10px); /* Glassmorphism effect */
     -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    max-height: 95vh;
 }
 
 /* On larger screens, make the container pop more */
@@ -89,6 +92,8 @@ body {
     #game-container {
         max-width: 450px;
         box-shadow: 0 30px 60px var(--shadow-color);
+        max-height: none;
+        display: block;
     }
 }
 
@@ -102,6 +107,8 @@ body {
 
 .screen.active {
     display: flex;
+    flex-grow: 1;
+    min-height: 0;
 }
 
 @keyframes fadeIn {
@@ -147,18 +154,19 @@ body {
 
 #card {
     width: 100%;
-    min-height: 450px; /* Taller to prevent squashed content */
+    min-height: 450px; /* Default height for larger screens */
     margin-bottom: 25px;
     position: relative;
+    flex-grow: 1;
 }
 
 #card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 450px;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
+    display: flex;
 }
 
 #card.is-flipped #card-inner {
@@ -178,6 +186,75 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 767px) {
+    body {
+        align-items: flex-start; /* Align to top on mobile */
+        padding: 10px;
+    }
+
+    #game-container {
+        padding: 20px;
+        height: 95vh; /* Force full height on mobile */
+        max-height: 98vh;
+        border-radius: 16px;
+    }
+
+    #card {
+        min-height: 200px; /* Ensure it doesn't collapse completely */
+        margin-bottom: 15px;
+        flex-shrink: 1; /* Allow it to shrink if needed */
+    }
+
+    #card-inner {
+        min-height: 0;
+    }
+
+    /* Start Screen Mobile Adjustments */
+    .logo h1 { font-size: 2.5rem; }
+    .logo p { margin: 5px 0 20px; font-size: 1rem; }
+    .high-score-display { margin-bottom: 15px; padding: 8px 16px; }
+    .action-button { padding: 14px; margin-bottom: 10px; font-size: 1rem; }
+    .footer-note { margin-top: 15px; display: none; } /* Hide footer note on small screens */
+
+    /* Game Screen Mobile Adjustments */
+    .game-header { margin-bottom: 10px; }
+    .action-button.small { padding: 8px 12px; margin-bottom: 10px; font-size: 0.8rem; }
+
+    #question-image-container {
+        max-height: 100px; /* Smaller image on mobile */
+        margin-bottom: 10px;
+    }
+
+    #question-text {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .presented-value-container {
+        padding: 8px 20px;
+        margin-bottom: 10px;
+    }
+
+    #presented-value { font-size: 1.8rem; }
+
+    #buttons-container { gap: 10px; }
+    .choice-button { padding: 15px; font-size: 1.1rem; }
+
+    /* End Screen Mobile Adjustments */
+    #final-score { font-size: 4rem; }
+    #final-score-container { margin: 10px 0; }
+    #graded-title-container { padding: 8px 16px; margin-bottom: 15px; }
+    #answer-reveal-container { padding: 12px; margin-bottom: 15px; }
+    #reveal-correct-answer { font-size: 1.2rem; }
+}
+
+@media (max-height: 600px) {
+    .logo h1 { font-size: 2rem; }
+    #question-image-container { display: none !important; } /* Hide image on very short screens */
 }
 
 #card-front {
