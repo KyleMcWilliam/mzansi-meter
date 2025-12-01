@@ -11,13 +11,19 @@ service cloud.firestore {
                        request.resource.data.score >= 0;
     }
 
-    // Allow public read access and validated writes to daily leaderboards
-    match /leaderboard_daily_{date}/{docId} {
+    // Fixed rule to match the collection name used in script.js
+    match /leaderboard_daily/{docId} {
         allow read: if true;
         allow create: if request.resource.data.name is string &&
                          request.resource.data.name.size() <= 3 &&
                          request.resource.data.score is number &&
                          request.resource.data.score >= 0;
+    }
+
+    // Rule for the new questions collection
+    match /questions/{docId} {
+      allow read: if true;
+      allow write: if true; // Temporarily allow write for migration
     }
   }
 }

@@ -98,12 +98,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Fetch and Initialize ---
-    fetch('questions.json')
-        .then(response => response.json())
-        .then(data => {
-            questions = data;
+    // Fetch questions from Firestore instead of JSON file
+    if (db) {
+        db.collection('questions').get().then(snapshot => {
+            if (!snapshot.empty) {
+                questions = snapshot.docs.map(doc => doc.data());
+                console.log("Questions loaded from Firestore:", questions.length);
+            } else {
+                console.warn("No questions found in Firestore.");
+            }
             init();
+        }).catch(error => {
+            console.error("Error loading questions:", error);
+            showToast("Error loading game data. Please refresh.", "error");
+            init(); // Try to init anyway
         });
+    } else {
+        console.error("Database not initialized");
+        init();
+    }
 
 
     function init() {
@@ -180,13 +193,38 @@ document.addEventListener('DOMContentLoaded', () => {
         dailyChallengeButton.textContent = 'Loading...';
 
         try {
-            // Fetch the 10 daily questions directly from the new endpoint
-            const response = await fetch('/api/getDailyQuestions');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (!questions || questions.length === 0) {
+                 // Try fetching if not loaded yet (e.g. direct nav)
+                 const snapshot = await db.collection('questions').get();
+                 questions = snapshot.docs.map(doc => doc.data());
             }
-            // The response is the array of questions itself
-            availableQuestions = await response.json();
+
+            if (questions.length === 0) {
+                throw new Error("No questions available");
+            }
+
+            // Client-side daily seeding logic
+            const today = new Date();
+            const year = today.getUTCFullYear();
+            const month = (today.getUTCMonth() + 1).toString().padStart(2, '0');
+            const day = today.getUTCDate().toString().padStart(2, '0');
+            const dateString = `${year}-${month}-${day}`;
+
+            // Create a numeric seed from the date string
+            let seed = 0;
+            for (let i = 0; i < dateString.length; i++) {
+                seed = (seed * 31 + dateString.charCodeAt(i)) & 0xFFFFFFFF;
+            }
+
+            const seededRandom = createSeededRandom(seed);
+
+            // Generate a predictable, shuffled sequence of indices
+            const allQuestionIndices = Array.from({ length: questions.length }, (_, i) => i);
+            const shuffledIndices = shuffleArray(allQuestionIndices, seededRandom);
+
+            // Take the first 10 indices for the daily challenge
+            const dailyQuestionIndices = shuffledIndices.slice(0, 10);
+            availableQuestions = dailyQuestionIndices.map(index => questions[index]);
 
             // Preload the first couple of images for a smoother experience
             preloadImages();
@@ -201,6 +239,30 @@ document.addEventListener('DOMContentLoaded', () => {
             dailyChallengeButton.disabled = false;
             dailyChallengeButton.textContent = 'Daily Challenge';
         }
+    }
+
+    // --- Helper Functions for Randomness ---
+    function createSeededRandom(seed) {
+        let state = seed;
+        const a = 1664525;
+        const c = 1013904223;
+        const m = 2 ** 32;
+
+        return function() {
+            state = (a * state + c) % m;
+            return state / m;
+        };
+    }
+
+    function shuffleArray(array, seededRandom) {
+        let m = array.length, t, i;
+        while (m) {
+            i = Math.floor(seededRandom() * m--);
+            t = array[m];
+            array[m] = array[i];
+            array[i] = t;
+        }
+        return array;
     }
 
     function startGame() {
