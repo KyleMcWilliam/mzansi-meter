@@ -53,6 +53,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // NEW: Mute Button
     const muteButton = document.getElementById('mute-button');
     let isMuted = localStorage.getItem('mzansiMeterMuted') === 'true';
+    let lastClickCoordinates = { x: 0, y: 0 }; // Store coordinates for floating text
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const storedTheme = localStorage.getItem('mzansiMeterTheme');
+
+    // Apply stored theme immediately
+    if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+        updateThemeIcon(storedTheme);
+    }
 
     const hadedaSound = document.getElementById('wrong-answer-hadeda');
     const taxiSound = document.getElementById('wrong-answer-taxi');
@@ -100,25 +111,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Fetch and Initialize ---
-    // Fetch questions from Firestore instead of JSON file
-    if (db) {
-        db.collection('questions').get().then(snapshot => {
-            if (!snapshot.empty) {
-                questions = snapshot.docs.map(doc => doc.data());
-                console.log("Questions loaded from Firestore:", questions.length);
-            } else {
-                console.warn("No questions found in Firestore.");
+    // Fetch questions from Firestore or fallback to JSON
+    async function loadQuestions() {
+        if (db) {
+            try {
+                const snapshot = await db.collection('questions').get();
+                if (!snapshot.empty) {
+                    questions = snapshot.docs.map(doc => doc.data());
+                    console.log("Questions loaded from Firestore:", questions.length);
+                    init();
+                    return;
+                }
+            } catch (error) {
+                console.error("Error loading questions from Firestore:", error);
             }
+        }
+
+        // Fallback to local JSON if Firestore fails or is empty (dev environment)
+        try {
+            const response = await fetch('questions.json');
+            questions = await response.json();
+            console.log("Questions loaded from local JSON:", questions.length);
             init();
-        }).catch(error => {
-            console.error("Error loading questions:", error);
+        } catch (error) {
+            console.error("Error loading local questions:", error);
             showToast("Error loading game data. Please refresh.", "error");
             init(); // Try to init anyway
-        });
-    } else {
-        console.error("Database not initialized");
-        init();
+        }
     }
+
+    loadQuestions();
 
 
     function init() {
@@ -127,7 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add click sound to all buttons
         document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', () => playSound(clickSound));
+            button.addEventListener('click', (e) => {
+                playSound(clickSound);
+                // Capture coordinates for any button, though we mainly use it for higher/lower
+                if (e.clientX && e.clientY) {
+                    lastClickCoordinates = { x: e.clientX, y: e.clientY };
+                }
+            });
         });
 
         startButton.addEventListener('click', startEndlessGame);
@@ -173,6 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mute Toggle Listener
         muteButton.addEventListener('click', toggleMute);
+
+        // Theme Toggle Listener
+        themeToggle.addEventListener('click', toggleTheme);
+
+    // Hide loading screen once initialized
+    document.getElementById('loading-screen').style.display = 'none';
     }
 
     // --- Game Flow ---
@@ -431,6 +465,7 @@ function nextQuestion() {
             updateScoreDisplay();
             playSound(correctSound); // Play correct sound
             triggerConfetti();
+            showFloatingText(lastClickCoordinates.x, lastClickCoordinates.y, true); // NEW: Floating Text
             if (navigator.vibrate) navigator.vibrate(50);
         } else {
             // --- INCORRECT ANSWER ---
@@ -444,6 +479,8 @@ function nextQuestion() {
             currentStreak = 0;
             updateScoreDisplay();
             updateLivesDisplay();
+
+            showFloatingText(lastClickCoordinates.x, lastClickCoordinates.y, false); // NEW: Floating Text
 
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             playWrongAnswerSound();
@@ -504,15 +541,12 @@ function nextQuestion() {
     // --- NEW: Timer Functions ---
     function startTimer() {
         // Reset animation
-        timerBar.style.transition = 'none';
-        timerBar.style.transform = 'scaleX(1)';
-        
-        // Trigger reflow
-        void timerBar.offsetWidth;
+        timerBar.classList.remove('animating');
+        void timerBar.offsetWidth; // Trigger reflow
 
         // Start animation
-        timerBar.style.transition = `transform ${QUESTION_TIME / 1000}s linear`;
-        timerBar.style.transform = 'scaleX(0)';
+        timerBar.style.animationDuration = `${QUESTION_TIME / 1000}s`;
+        timerBar.classList.add('animating');
 
         // Set timeout for game over
         questionTimer = setTimeout(() => handleTimeUp(), QUESTION_TIME);
@@ -535,6 +569,30 @@ function nextQuestion() {
     }
 
 
+    // --- Floating Text Logic ---
+    function showFloatingText(x, y, isPositive) {
+        const positiveWords = ["Lekker!", "Sho!", "Laduma!", "Sharp!", "Yebo!", "Aweh!", "Heita!"];
+        const negativeWords = ["Eish!", "Hawu!", "Ag no!", "Yoh!", "Haikona!", "Tsek!", "Aikona!"];
+
+        const words = isPositive ? positiveWords : negativeWords;
+        const text = words[Math.floor(Math.random() * words.length)];
+
+        const el = document.createElement('div');
+        el.className = `floating-text ${isPositive ? 'positive' : 'negative'}`;
+        el.textContent = text;
+
+        // Ensure it's within viewport bounds roughly
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        document.body.appendChild(el);
+
+        // Remove after animation
+        setTimeout(() => {
+            el.remove();
+        }, 1000);
+    }
+
     // --- UI & Helpers ---
     function formatValue(value, format) {
         switch (format) {
@@ -551,9 +609,47 @@ function nextQuestion() {
         }
     }
     
-    function switchScreen(screen) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(`${screen}-screen`).classList.add('active');
+    function switchScreen(screenName) {
+        const currentScreen = document.querySelector('.screen.active');
+        const nextScreen = document.getElementById(`${screenName}-screen`);
+
+        if (!currentScreen || currentScreen === nextScreen) {
+            if (currentScreen) currentScreen.classList.remove('active');
+            nextScreen.classList.add('active');
+            return;
+        }
+
+        // Determine direction based on screen flow
+        // Flow: Start -> Game -> End
+        // Screens: 'start', 'game', 'end', 'leaderboard'
+        let direction = 'up'; // Default: next screen slides up
+
+        const flowOrder = ['start', 'game', 'end'];
+        const currentIndex = flowOrder.indexOf(currentScreen.id.replace('-screen', ''));
+        const nextIndex = flowOrder.indexOf(screenName);
+
+        if (currentIndex !== -1 && nextIndex !== -1) {
+            if (nextIndex < currentIndex) {
+                direction = 'down';
+            }
+        } else if (screenName === 'leaderboard') {
+             direction = 'up';
+        } else if (currentScreen.id === 'leaderboard-screen') {
+             direction = 'down';
+        }
+
+        // Apply animations
+        const exitClass = direction === 'up' ? 'slide-up-exit' : 'slide-down-exit';
+        const enterClass = direction === 'up' ? 'slide-up-enter' : 'slide-down-enter';
+
+        currentScreen.classList.add(exitClass);
+        nextScreen.classList.add('active', enterClass);
+
+        // Cleanup after animation
+        nextScreen.addEventListener('animationend', () => {
+            currentScreen.classList.remove('active', 'slide-up-exit', 'slide-down-exit');
+            nextScreen.classList.remove('slide-up-enter', 'slide-down-enter');
+        }, { once: true });
     }
 
     function updateScoreDisplay() {
@@ -718,6 +814,38 @@ function nextQuestion() {
         }
     }
 
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        let newTheme = 'light';
+
+        if (currentTheme === 'dark') {
+            newTheme = 'light';
+        } else if (currentTheme === 'light') {
+            newTheme = 'dark';
+        } else {
+            // System preference was used, now we toggle
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                newTheme = 'light';
+            } else {
+                newTheme = 'dark';
+            }
+        }
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('mzansiMeterTheme', newTheme);
+        updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+            themeToggle.textContent = '☀️';
+            themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
+        } else {
+            themeToggle.textContent = '🌙';
+            themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
+        }
+    }
+
     function updateOgTags(score, title) {
         const ogTitle = `I scored ${score} on The Mzansi Meter!`;
         const ogDescription = `They call me "${title}". Think you can do better, boet?`;
@@ -808,7 +936,3 @@ function nextQuestion() {
     }
 
 });
-
-window.onload = function() {
-    document.getElementById('loading-screen').style.display = 'none';
-};

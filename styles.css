@@ -25,7 +25,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
         /* Dark Mode Variables */
         --bg-color: #121212;
         --card-bg: #1E1E1E;
@@ -50,6 +50,32 @@
         --button-higher-gradient: linear-gradient(145deg, #0a3d2e, #1a1a1a);
         --button-lower-gradient: linear-gradient(145deg, #4a1c1c, #1a1a1a);
     }
+}
+
+:root[data-theme="dark"] {
+    /* Dark Mode Variables - Duplicate to force override */
+    --bg-color: #121212;
+    --card-bg: #1E1E1E;
+    --primary-color: #009e60; /* Brighter Green for Dark Mode */
+    --primary-color-hover: #007A4D;
+    --secondary-color: #FFC107; /* Brighter Gold */
+    --text-color: #E0E0E0;
+    --light-text: #FFFFFF;
+    --red-color: #FF5252; /* Brighter Red */
+    --blue-color: #448AFF;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --hover-shadow: rgba(0, 0, 0, 0.7);
+    --input-bg: #2C2C2C;
+    --toast-bg: #333333;
+    --modal-bg: rgba(0, 0, 0, 0.8);
+    --modal-content-bg: #1E1E1E;
+
+    /* Gradients Dark */
+    --body-gradient: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
+    --card-front-gradient: radial-gradient(circle, #2a2a2a, #1e1e1e);
+    --button-higher-gradient: linear-gradient(145deg, #0a3d2e, #1a1a1a);
+    --button-lower-gradient: linear-gradient(145deg, #4a1c1c, #1a1a1a);
 }
 
 body {
@@ -84,7 +110,9 @@ body {
     -webkit-backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
-    max-height: 95vh;
+    height: 90vh; /* Fixed height for absolute positioning of children */
+    max-height: 800px; /* Max height constraint */
+    min-height: 600px; /* Minimum height constraint */
 }
 
 /* On larger screens, make the container pop more */
@@ -92,7 +120,6 @@ body {
     #game-container {
         max-width: 450px;
         box-shadow: 0 30px 60px var(--shadow-color);
-        max-height: none;
         display: block;
     }
 }
@@ -102,18 +129,43 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smoother ease-out */
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto; /* Allow scrolling within screen if needed */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .screen.active {
     display: flex;
-    flex-grow: 1;
-    min-height: 0;
+    z-index: 10;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+/* Slide Transitions */
+.slide-up-enter { animation: slideUpEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-up-exit { animation: slideUpExit 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-down-enter { animation: slideDownEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.slide-down-exit { animation: slideDownExit 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes slideUpEnter {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideUpExit {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100%); opacity: 0; }
+}
+
+@keyframes slideDownEnter {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideDownExit {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
 }
 
 /* --- Start Screen --- */
@@ -299,22 +351,43 @@ body {
 /* Timer Styles */
 #timer-container {
     width: 100%;
-    height: 6px;
+    height: 8px;
     background-color: var(--border-color);
-    border-radius: 3px;
+    border-radius: 4px;
     position: absolute;
-    top: 15px; /* Moved inside padding */
+    top: 15px;
     left: 25px;
     right: 25px;
     width: calc(100% - 50px);
+    overflow: hidden; /* Ensure rounded corners for child */
 }
+
 #timer-bar {
     width: 100%;
     height: 100%;
-    background-color: var(--secondary-color);
-    border-radius: 3px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
     transform-origin: left;
-    transition: transform 10s linear;
+    transform: scaleX(1);
+    /* No default transition, animation is applied via JS/Class */
+}
+
+#timer-bar.animating {
+    animation: shrinkTimer 10s linear forwards;
+}
+
+@keyframes shrinkTimer {
+    0% {
+        transform: scaleX(1);
+        background-color: var(--primary-color);
+    }
+    50% {
+        background-color: var(--secondary-color);
+    }
+    100% {
+        transform: scaleX(0);
+        background-color: var(--red-color);
+    }
 }
 
 /* Image Styles */
@@ -497,41 +570,59 @@ body {
     visibility: visible;
 }
 
-/* --- General Button Styles --- */
+/* --- General Button Styles (Arcade Look) --- */
 .action-button {
     width: 100%;
     padding: 18px;
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 800;
     border-radius: 14px;
     border: none;
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--light-text);
-    transition: all 0.2s ease;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 10px rgba(0, 122, 77, 0.2);
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 15px;
+    /* 3D Bevel Effect */
+    box-shadow: 0 6px 0 var(--primary-color-hover), 0 10px 10px var(--shadow-color);
+    transform: translateY(0);
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
 .action-button:hover {
-    background-color: var(--primary-color-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 122, 77, 0.3);
+    box-shadow: 0 8px 0 var(--primary-color-hover), 0 15px 20px var(--shadow-color);
+    filter: brightness(1.1);
+}
+
+.action-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--primary-color-hover), 0 5px 5px var(--shadow-color);
 }
 
 .action-button.secondary {
-    background-color: transparent;
+    background-color: var(--card-bg);
     color: var(--text-color);
     border: 2px solid var(--border-color);
-    box-shadow: none;
+    box-shadow: 0 6px 0 var(--border-color), 0 10px 10px var(--shadow-color);
 }
+
 .action-button.secondary:hover {
-    background-color: var(--border-color);
+    background-color: var(--bg-color);
     transform: translateY(-2px);
+    box-shadow: 0 8px 0 var(--border-color), 0 15px 20px var(--shadow-color);
     color: var(--text-color);
 }
 
+.action-button.secondary:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--border-color), 0 5px 5px var(--shadow-color);
+}
+
 #leaderboard-toggle-buttons button.secondary:hover {
-    background-color: var(--border-color);
+    background-color: var(--bg-color);
 }
 
 /* --- Feedback Animations --- */
@@ -609,6 +700,43 @@ body {
     opacity: 1;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* --- Floating Text (Juice) --- */
+.floating-text {
+    position: fixed;
+    font-size: 2rem;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 2000;
+    animation: floatUp 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    white-space: nowrap;
+}
+
+.floating-text.positive {
+    color: var(--secondary-color); /* Gold */
+    -webkit-text-stroke: 1px #000;
+}
+
+.floating-text.negative {
+    color: var(--red-color);
+    -webkit-text-stroke: 1px #fff;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5) rotate(-10deg);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -150%) scale(1.2) rotate(5deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -300%) scale(1) rotate(0deg);
+    }
 }
 
 /* Leaderboard & Highscore Input */
@@ -751,16 +879,21 @@ body {
     background-color: var(--blue-color);
 }
 
-/* --- Mute Button --- */
-.icon-button {
+/* --- Top Controls (Theme & Mute) --- */
+#top-controls {
     position: absolute;
     top: 25px;
     right: 25px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+}
+
+.icon-button {
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    z-index: 100;
     transition: transform 0.2s ease, background-color 0.2s;
     padding: 8px;
     border-radius: 50%;
@@ -785,9 +918,12 @@ body {
 
 /* Position adjustment for mobile */
 @media (max-width: 380px) {
-    .icon-button {
+    #top-controls {
         top: 15px;
         right: 15px;
+        gap: 8px;
+    }
+    .icon-button {
         width: 38px;
         height: 38px;
     }
