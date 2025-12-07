@@ -217,7 +217,7 @@ body {
     .logo p { margin: 5px 0 20px; font-size: 1rem; }
     .high-score-display { margin-bottom: 15px; padding: 8px 16px; }
     .action-button { padding: 14px; margin-bottom: 10px; font-size: 1rem; }
-    .footer-note { margin-top: 15px; display: none; } /* Hide footer note on small screens */
+    .footer-note { margin-top: 15px; display: block; } /* Show footer note on small screens */
 
     /* Game Screen Mobile Adjustments */
     .game-header { margin-bottom: 10px; }
@@ -386,6 +386,11 @@ body {
 .choice-button:active {
     transform: translateY(0);
     box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+/* Button Press Effect for all action buttons */
+.action-button:active {
+    transform: scale(0.98);
 }
 
 #higher-button {

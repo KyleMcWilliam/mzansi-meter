@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hadedaSound = document.getElementById('wrong-answer-hadeda');
     const taxiSound = document.getElementById('wrong-answer-taxi');
+    const correctSound = document.getElementById('correct-answer-sound'); // NEW
+    const clickSound = document.getElementById('click-sound'); // NEW
     const confettiCanvas = document.getElementById('confetti-canvas');
     const customConfetti = confetti.create(confettiCanvas, {
         resize: true,
@@ -122,6 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         updateMuteButton(); // Set initial state
         highScoreStartDisplay.textContent = highScore;
+
+        // Add click sound to all buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => playSound(clickSound));
+        });
+
         startButton.addEventListener('click', startEndlessGame);
         dailyChallengeButton.addEventListener('click', startDailyChallenge);
         restartButton.addEventListener('click', () => {
@@ -421,6 +429,7 @@ function nextQuestion() {
             currentScore++;
             currentStreak++;
             updateScoreDisplay();
+            playSound(correctSound); // Play correct sound
             triggerConfetti();
             if (navigator.vibrate) navigator.vibrate(50);
         } else {
@@ -682,8 +691,15 @@ function nextQuestion() {
 
     function playWrongAnswerSound() {
         if (isMuted) return;
-        if (Math.random() > 0.5) hadedaSound.play();
-        else taxiSound.play();
+        // Randomly choose between hadeda and taxi sound
+        const soundToPlay = Math.random() > 0.5 ? hadedaSound : taxiSound;
+        playSound(soundToPlay);
+    }
+
+    function playSound(audioElement) {
+        if (isMuted || !audioElement) return;
+        audioElement.currentTime = 0; // Reset to start
+        audioElement.play().catch(e => console.log("Audio play failed:", e));
     }
 
     function toggleMute() {
