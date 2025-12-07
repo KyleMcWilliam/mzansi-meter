@@ -29,9 +29,13 @@
             </div>
             <div class="high-score-display">High Score: <span id="high-score-start">0</span></div>
             <button id="start-button" class="action-button">Endless Mode</button>
-            <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
+            <div id="daily-challenge-container" style="position: relative;">
+                <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
+                <div id="daily-streak-badge" style="display: none;">🔥 <span id="streak-count-badge">0</span></div>
+            </div>
             <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
             <button id="how-to-play-button" class="action-button secondary">How to Play</button>
+            <button id="suggest-question-start-button" class="action-button secondary small">Suggest a Question</button>
             <div class="footer-note">
                 🇿🇦 How lekker is your local knowledge? 🇿🇦
                 <div class="seo-text">
@@ -114,6 +118,7 @@
             </div>
             <button id="share-button" class="action-button">Share Your Score</button>
             <button id="restart-button" class="action-button secondary">Play Again</button>
+            <button id="suggest-question-end-button" class="action-button secondary small">Suggest a Question</button>
              <!-- NEW: High Score Input -->
             <div id="highscore-input-container" style="display: none;">
                 <p>Congrats! You're on the leaderboard!</p>
@@ -158,6 +163,49 @@
             <p>A question and a value will be displayed. You have to guess if the actual answer is <strong>Higher</strong> or <strong>Lower</strong> than the value shown.</p>
             <p>Get as many right as you can in a row. One wrong guess and it's game over!</p>
             <p>Good luck, boet!</p>
+        </div>
+    </div>
+
+    <!-- Revive Modal -->
+    <div id="revive-modal" class="modal">
+        <div class="modal-content">
+            <!-- No close button, user must choose -->
+            <h2>Eish! Last Chance!</h2>
+            <p>Don't give up now! Share the game to revive and get 1 life back.</p>
+            <button id="share-revive-button" class="action-button">Share to Revive (+1 ❤️)</button>
+            <button id="give-up-button" class="action-button secondary">Give Up</button>
+        </div>
+    </div>
+
+    <!-- Suggest Question Modal -->
+    <div id="suggest-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Suggest a Question</h2>
+            <p>Got a lekker South African fact? Share it!</p>
+            <form id="suggest-form">
+                <div class="form-group">
+                    <label for="suggest-question">Question Text</label>
+                    <input type="text" id="suggest-question" placeholder="e.g. Price of a Kota in Soweto" required minlength="10">
+                </div>
+                <div class="form-group">
+                    <label for="suggest-value">Value (Real Number)</label>
+                    <input type="number" id="suggest-value" placeholder="e.g. 25" required step="any">
+                </div>
+                <div class="form-group">
+                    <label for="suggest-format">Format</label>
+                    <select id="suggest-format">
+                        <option value="currency">Currency (R)</option>
+                        <option value="number">Number</option>
+                        <option value="year">Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="suggest-source">Source/Context (Optional)</label>
+                    <input type="text" id="suggest-source" placeholder="Link or explanation for fact-checking">
+                </div>
+                <button type="submit" class="action-button">Submit Suggestion</button>
+            </form>
         </div>
     </div>
 

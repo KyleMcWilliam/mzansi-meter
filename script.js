@@ -18,6 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const howToPlayModal = document.getElementById('how-to-play-modal');
     const closeModalButton = howToPlayModal.querySelector('.close-button');
 
+    const suggestQuestionStartButton = document.getElementById('suggest-question-start-button');
+    const suggestQuestionEndButton = document.getElementById('suggest-question-end-button');
+    const suggestModal = document.getElementById('suggest-modal');
+    const closeSuggestModalButton = suggestModal.querySelector('.close-button');
+    const suggestForm = document.getElementById('suggest-form');
+
+    // NEW: Revive Modal Elements
+    const reviveModal = document.getElementById('revive-modal');
+    const shareReviveButton = document.getElementById('share-revive-button');
+    const giveUpButton = document.getElementById('give-up-button');
+
     const questionText = document.getElementById('question-text');
     const presentedValue = document.getElementById('presented-value');
     // NEW: Image elements
@@ -46,6 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerInitials = document.getElementById('player-initials');
     const submitScoreButton = document.getElementById('submit-score-button');
 
+    // NEW: Streak Elements
+    const dailyStreakBadge = document.getElementById('daily-streak-badge');
+    const streakCountBadge = document.getElementById('streak-count-badge');
+
     // NEW: Answer reveal elements
     const revealQuestionText = document.getElementById('reveal-question-text');
     const revealCorrectAnswer = document.getElementById('reveal-correct-answer');
@@ -68,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentScore = 0;
     let currentStreak = 0;
     let lives = 3; // NEW
+    let hasRevived = false; // NEW: Revive Flag
     let highScore = localStorage.getItem('mzansiMeterHighScore') || 0;
     let questions = [];
     let availableQuestions = [];
@@ -109,21 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.warn("No questions found in Firestore.");
             }
-            init();
         }).catch(error => {
             console.error("Error loading questions:", error);
             showToast("Error loading game data. Please refresh.", "error");
-            init(); // Try to init anyway
         });
     } else {
         console.error("Database not initialized");
-        init();
     }
 
+    // Initialize UI immediately
+    init();
 
     function init() {
         updateMuteButton(); // Set initial state
         highScoreStartDisplay.textContent = highScore;
+        initStreak(); // Initialize streak
 
         // Add click sound to all buttons
         document.querySelectorAll('button').forEach(button => {
@@ -169,6 +185,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.target == howToPlayModal) {
                 howToPlayModal.style.display = 'none';
             }
+            if (event.target == suggestModal) {
+                suggestModal.style.display = 'none';
+            }
+        });
+
+        // Suggest Question Listeners
+        const openSuggestModal = () => suggestModal.style.display = 'block';
+        const closeSuggestModal = () => suggestModal.style.display = 'none';
+
+        suggestQuestionStartButton.addEventListener('click', openSuggestModal);
+        suggestQuestionEndButton.addEventListener('click', openSuggestModal);
+        closeSuggestModalButton.addEventListener('click', closeSuggestModal);
+        suggestForm.addEventListener('submit', handleSuggestSubmit);
+
+        // Revive Modal Listeners
+        shareReviveButton.addEventListener('click', handleRevive);
+        giveUpButton.addEventListener('click', () => {
+             reviveModal.style.display = 'none';
+             endGame("Game Over!");
         });
 
         // Mute Toggle Listener
@@ -277,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentScore = 0;
         currentStreak = 0;
         lives = 3; // Reset lives
+        hasRevived = false; // Reset revive flag
         updateScoreDisplay();
         updateLivesDisplay(); // Update lives UI
 
@@ -339,6 +375,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Hide the input container on error to prevent issues
                 highscoreInputContainer.style.display = 'none';
             }
+        }
+
+        // --- Daily Streak Update ---
+        if (isDailyChallenge) {
+             updateDailyStreak();
         }
     }
 
@@ -465,7 +506,7 @@ function nextQuestion() {
                     showToast(`Eish! That was wrong. You have ${lives} lives left.`, 'error');
                     nextQuestion();
                 } else {
-                    endGame(`Eish, you're out of lives!`);
+                    checkReviveOrEnd();
                 }
             }
         }, 1500);
@@ -530,8 +571,55 @@ function nextQuestion() {
             showToast("Time's up! You lost a life.", 'error');
             nextQuestion();
         } else {
-            endGame("Time's up, my bru! Game over.");
+            checkReviveOrEnd("Time's up, my bru! Game over.");
         }
+    }
+
+    // --- Revive Logic ---
+    function checkReviveOrEnd(reason = "Eish, you're out of lives!") {
+        if (!hasRevived) {
+            // Show Revive Modal
+            reviveModal.style.display = 'block';
+        } else {
+            endGame(reason);
+        }
+    }
+
+    async function handleRevive() {
+        // Trigger share
+        const score = currentScore;
+        const shareText = `Help! I need a revive on The Mzansi Meter! I'm on score ${score}. #MzansiMeter`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Revive Me!',
+                    text: shareText,
+                    url: window.location.href
+                });
+                completeRevive();
+            } catch (error) {
+                console.error('Error sharing:', error);
+                // Fallback to clipboard if share fails or is cancelled (some browsers throw error on cancel)
+                // We will be generous and grant revive on click/attempt
+                copyToClipboard(shareText);
+                completeRevive();
+            }
+        } else {
+            copyToClipboard(shareText);
+            completeRevive();
+        }
+    }
+
+    function completeRevive() {
+        hasRevived = true;
+        lives = 1;
+        updateLivesDisplay();
+        reviveModal.style.display = 'none';
+        showToast("You've been revived! +1 Life ❤️", "success");
+
+        // Move to next question to continue the game
+        nextQuestion();
     }
 
 
@@ -776,6 +864,112 @@ function nextQuestion() {
         navigator.clipboard.writeText(text).then(() => {
             showToast("Score copied to clipboard! Now go and brag on social media.", 'success');
         }).catch(err => { console.error('Failed to copy: ', err); });
+    }
+
+    // --- Daily Streak Logic ---
+    function initStreak() {
+        const lastDate = localStorage.getItem('mzansiMeterLastDailyDate');
+        let streak = parseInt(localStorage.getItem('mzansiMeterDailyStreak') || '0');
+        const today = getYYYYMMDD();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+        // If played today, streak is current.
+        // If played yesterday, streak is active.
+        // If last played before yesterday, streak is broken.
+        if (lastDate !== today && lastDate !== yesterdayStr) {
+             streak = 0;
+             localStorage.setItem('mzansiMeterDailyStreak', '0');
+        }
+
+        if (streak > 0) {
+            streakCountBadge.textContent = streak;
+            dailyStreakBadge.style.display = 'block';
+        }
+    }
+
+    function updateDailyStreak() {
+        const today = getYYYYMMDD();
+        const lastDate = localStorage.getItem('mzansiMeterLastDailyDate');
+
+        // Only increment if not already played today
+        if (lastDate !== today) {
+            let streak = parseInt(localStorage.getItem('mzansiMeterDailyStreak') || '0');
+            streak++;
+            localStorage.setItem('mzansiMeterDailyStreak', streak);
+            localStorage.setItem('mzansiMeterLastDailyDate', today);
+
+            streakCountBadge.textContent = streak;
+            dailyStreakBadge.style.display = 'block';
+
+            // Pulse animation trigger (optional, CSS handles loop)
+            showToast(`Lekker! Daily streak increased to ${streak}! 🔥`, 'success');
+        }
+    }
+
+    // --- Suggestion Feature ---
+    async function handleSuggestSubmit(e) {
+        e.preventDefault();
+
+        const question = document.getElementById('suggest-question').value.trim();
+        const value = parseFloat(document.getElementById('suggest-value').value);
+        const format = document.getElementById('suggest-format').value;
+        const source = document.getElementById('suggest-source').value.trim();
+
+        // Validation
+        if (question.length < 10) {
+            showToast("Question is too short. Please add more detail.", "error");
+            return;
+        }
+        if (isNaN(value)) {
+            showToast("Please enter a valid number for the value.", "error");
+            return;
+        }
+
+        // Limit Submissions (Local Storage)
+        const today = getYYYYMMDD();
+        let submissions = JSON.parse(localStorage.getItem('mzansiMeterSubmissions') || '{}');
+        if (submissions.date !== today) {
+            submissions = { date: today, count: 0 };
+        }
+
+        if (submissions.count >= 5) {
+            showToast("You've reached the daily limit for suggestions. Thanks for your enthusiasm!", "error");
+            suggestModal.style.display = 'none';
+            return;
+        }
+
+        const submitButton = suggestForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+
+        try {
+             if (!db) throw new Error("Firestore is not initialized.");
+
+             await db.collection('suggestions').add({
+                 question,
+                 value,
+                 format,
+                 source,
+                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                 status: 'pending' // Admin can review later
+             });
+
+             submissions.count++;
+             localStorage.setItem('mzansiMeterSubmissions', JSON.stringify(submissions));
+
+             showToast("Shot! Your suggestion has been sent for review.", "success");
+             suggestForm.reset();
+             suggestModal.style.display = 'none';
+
+        } catch (error) {
+            console.error("Error submitting suggestion:", error);
+            showToast("Could not send suggestion. Check your connection.", "error");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Submit Suggestion";
+        }
     }
 
     // --- Toast Notification System ---
