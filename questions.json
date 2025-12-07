@@ -41,7 +41,7 @@
     },
     {
         "question": "Price of a single Chappies bubblegum (2025)",
-        "value": 1.50,
+        "value": 1.5,
         "format": "currency"
     },
     {
@@ -61,7 +61,7 @@
     },
     {
         "question": "Price of a 500ml Steri Stumpie (chocolate flavour, 2025)",
-        "value": 23.00,
+        "value": 23.0,
         "format": "currency"
     },
     {
@@ -76,7 +76,7 @@
     },
     {
         "question": "Cost in Rands for a standard Big Mac burger from McDonald's (2025)",
-        "value": 64.70,
+        "value": 64.7,
         "format": "currency"
     },
     {
@@ -128,7 +128,7 @@
     },
     {
         "question": "Cost of a 'Streetwise Two' from KFC (2025)",
-        "value": 59.90,
+        "value": 59.9,
         "format": "currency"
     },
     {
@@ -163,7 +163,7 @@
     },
     {
         "question": "Price of a 'slap chip' roll from a corner cafe (2025)",
-        "value": 30.00,
+        "value": 30.0,
         "format": "currency"
     },
     {
@@ -193,7 +193,7 @@
     },
     {
         "question": "Price of a ticket for the Gautrain from Sandton to O.R. Tambo Airport (2025)",
-        "value": 206.00,
+        "value": 206.0,
         "format": "currency"
     },
     {
@@ -203,7 +203,7 @@
     },
     {
         "question": "The cost of a boerewors roll at a local rugby match (2025)",
-        "value": 45.00,
+        "value": 45.0,
         "format": "currency"
     },
     {
@@ -213,7 +213,7 @@
     },
     {
         "question": "Price for a 120g bag of Simba All Gold Tomato Sauce chips (2025)",
-        "value": 21.50,
+        "value": 21.5,
         "format": "currency"
     },
     {
@@ -247,8 +247,8 @@
         "format": "year"
     },
     {
-        "question": "Price of a regular coffee at a Vida e Caffè (Americano, 2025)",
-        "value": 29.00,
+        "question": "Price of a regular coffee at a Vida e Caff\u00e8 (Americano, 2025)",
+        "value": 29.0,
         "format": "currency"
     },
     {
@@ -263,7 +263,7 @@
     },
     {
         "question": "The price of a 'Wimpy Classic' breakfast (2025)",
-        "value": 89.90,
+        "value": 89.9,
         "format": "currency"
     },
     {
@@ -283,17 +283,17 @@
     },
     {
         "question": "Price of a large (30cm) Debonairs 'Meaty Triple Decker' pizza (2025)",
-        "value": 199.90,
+        "value": 199.9,
         "format": "currency"
     },
     {
         "question": "Price of a block of Cadbury Dairy Milk chocolate (80g, 2025)",
-        "value": 22.00,
+        "value": 22.0,
         "format": "currency"
     },
     {
         "question": "Price of a family-sized bag of NikNaks (135g, 2025)",
-        "value": 19.50,
+        "value": 19.5,
         "format": "currency"
     },
     {
@@ -318,7 +318,7 @@
     },
     {
         "question": "Price of a packet of Fizzers sweets (2025)",
-        "value": 12.00,
+        "value": 12.0,
         "format": "currency"
     },
     {
@@ -338,12 +338,12 @@
     },
     {
         "question": "Price for a vetkoek with mince from a padstal (2025)",
-        "value": 45.00,
+        "value": 45.0,
         "format": "currency"
     },
     {
         "question": "Price of a large portion of biltong (250g) from a butcher (2025)",
-        "value": 110.00,
+        "value": 110.0,
         "format": "currency"
     },
     {
@@ -359,7 +359,7 @@
     },
     {
         "question": "Price of a 330ml can of Coke at a supermarket (2025)",
-        "value": 10.50,
+        "value": 10.5,
         "format": "currency"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
         "question": "Price of a standard 'bunny chow' in Durban (quarter loaf, 2025)",
-        "value": 85.00,
+        "value": 85.0,
         "format": "currency"
     },
     {
@@ -419,7 +419,7 @@
     },
     {
         "question": "Price of a one-way trip up Table Mountain in the cable car (adult, AM, 2025)",
-        "value": 420.00,
+        "value": 420.0,
         "format": "currency"
     },
     {
@@ -435,7 +435,7 @@
     },
     {
         "question": "Price of a 6-pack of Savanna Dry cider (2025)",
-        "value": 115.00,
+        "value": 115.0,
         "format": "currency"
     },
     {
@@ -465,7 +465,7 @@
     },
     {
         "question": "Price of a 'Steers Wacky Wednesday' deal (two burgers, 2025)",
-        "value": 69.90,
+        "value": 69.9,
         "format": "currency"
     },
     {
@@ -475,7 +475,7 @@
     },
     {
         "question": "The price of a Castle Lite beer at a shebeen (2025)",
-        "value": 20.00,
+        "value": 20.0,
         "format": "currency"
     },
     {
@@ -490,7 +490,7 @@
     },
     {
         "question": "The price of a 'walkie' (chicken foot) from a street vendor (2025)",
-        "value": 5.00,
+        "value": 5.0,
         "format": "currency"
     },
     {
@@ -500,7 +500,7 @@
     },
     {
         "question": "The price of a 2L Oros concentrate (2025)",
-        "value": 45.00,
+        "value": 45.0,
         "format": "currency"
     },
     {
@@ -515,7 +515,7 @@
     },
     {
         "question": "The price of a 'Tropika' 500ml juice (2025)",
-        "value": 15.00,
+        "value": 15.0,
         "format": "currency"
     },
     {
@@ -530,7 +530,7 @@
     },
     {
         "question": "The price of a standard 'Vienna and chips' parcel (2025)",
-        "value": 25.00,
+        "value": 25.0,
         "format": "currency"
     },
     {
@@ -545,7 +545,7 @@
     },
     {
         "question": "The price of a 'Fattis & Monis' spaghetti 500g packet (2025)",
-        "value": 28.00,
+        "value": 28.0,
         "format": "currency"
     },
     {
@@ -560,7 +560,197 @@
     },
     {
         "question": "The price of a 'Lunch Bar' chocolate (2025)",
-        "value": 12.50,
+        "value": 12.5,
+        "format": "currency"
+    },
+    {
+        "question": "Year the first heart transplant was performed at Groote Schuur",
+        "value": 1967,
+        "format": "year"
+    },
+    {
+        "question": "Height of the Tugela Falls in metres",
+        "value": 948,
+        "format": "number"
+    },
+    {
+        "question": "Year Chris Hani was assassinated",
+        "value": 1993,
+        "format": "year"
+    },
+    {
+        "question": "Number of years Nelson Mandela spent on Robben Island",
+        "value": 18,
+        "format": "number"
+    },
+    {
+        "question": "Price of a litre of 95 Unleaded Petrol (Inland, 2025 approx)",
+        "value": 24.5,
+        "format": "currency"
+    },
+    {
+        "question": "Year the Voortrekker Monument was inaugurated",
+        "value": 1949,
+        "format": "year"
+    },
+    {
+        "question": "Number of seats in the National Assembly",
+        "value": 400,
+        "format": "number"
+    },
+    {
+        "question": "Year the Constitution of South Africa was adopted",
+        "value": 1996,
+        "format": "year"
+    },
+    {
+        "question": "Height of Ponte City in metres",
+        "value": 173,
+        "format": "number"
+    },
+    {
+        "question": "Depth of Mponeng Gold Mine in kilometres (approx)",
+        "value": 4,
+        "format": "number"
+    },
+    {
+        "question": "Year Trevor Noah was born",
+        "value": 1984,
+        "format": "year"
+    },
+    {
+        "question": "Number of cents in a South African Rand",
+        "value": 100,
+        "format": "number"
+    },
+    {
+        "question": "Year Kaizer Chiefs was founded",
+        "value": 1970,
+        "format": "year"
+    },
+    {
+        "question": "Year Orlando Pirates was founded",
+        "value": 1937,
+        "format": "year"
+    },
+    {
+        "question": "Price of a Sunday Times newspaper (2025)",
+        "value": 37.0,
+        "format": "currency"
+    },
+    {
+        "question": "Cost of a light motor vehicle toll fee at Mooi River (2025)",
+        "value": 64.0,
+        "format": "currency"
+    },
+    {
+        "question": "Year the Natives Land Act was passed",
+        "value": 1913,
+        "format": "year"
+    },
+    {
+        "question": "Number of Metropolitan Municipalities in SA",
+        "value": 8,
+        "format": "number"
+    },
+    {
+        "question": "Year Kirstenbosch National Botanical Garden was established",
+        "value": 1913,
+        "format": "year"
+    },
+    {
+        "question": "Approximate number of plant species in the Cape Floral Kingdom",
+        "value": 9000,
+        "format": "number"
+    },
+    {
+        "question": "Year Rhodes University was founded",
+        "value": 1904,
+        "format": "year"
+    },
+    {
+        "question": "Price of a standard 2D movie ticket at Ster-Kinekor (2025)",
+        "value": 110.0,
+        "format": "currency"
+    },
+    {
+        "question": "Year the Sharpeville Massacre occurred",
+        "value": 1960,
+        "format": "year"
+    },
+    {
+        "question": "Year Steve Biko died",
+        "value": 1977,
+        "format": "year"
+    },
+    {
+        "question": "Year Sol Plaatje was born",
+        "value": 1876,
+        "format": "year"
+    },
+    {
+        "question": "Population of South Africa in millions (approx 2025)",
+        "value": 63,
+        "format": "number"
+    },
+    {
+        "question": "Year the 'Cullinan Diamond' was discovered",
+        "value": 1905,
+        "format": "year"
+    },
+    {
+        "question": "Number of storeys in the Leonardo building (Sandton)",
+        "value": 55,
+        "format": "number"
+    },
+    {
+        "question": "Year the Gautrain started operating",
+        "value": 2010,
+        "format": "year"
+    },
+    {
+        "question": "Price of a 750ml bottle of Richelieu Brandy (2025)",
+        "value": 199.0,
+        "format": "currency"
+    },
+    {
+        "question": "Year Mark Shuttleworth went to space",
+        "value": 2002,
+        "format": "year"
+    },
+    {
+        "question": "Number of official wickets taken by Shaun Pollock in Test cricket",
+        "value": 421,
+        "format": "number"
+    },
+    {
+        "question": "Year the Anglo-Boer War (South African War) started",
+        "value": 1899,
+        "format": "year"
+    },
+    {
+        "question": "Price of a 2.5kg bag of Huletts White Sugar (2025)",
+        "value": 55.0,
+        "format": "currency"
+    },
+    {
+        "question": "Year Wayde van Niekerk broke the 400m world record",
+        "value": 2016,
+        "format": "year"
+    },
+    {
+        "question": "Number of goals Benni McCarthy scored for Bafana Bafana",
+        "value": 31,
+        "format": "number"
+    },
+    {
+        "question": "Year the 'Groot Trek' began",
+        "value": 1835,
+        "format": "year"
+    },
+    {
+        "question": "Price of a 10kg bag of Tastic Rice (2025)",
+        "value": 189.0,
         "format": "currency"
     }
 ]
