@@ -4,8 +4,8 @@
   "description": "A South African guessing game.",
   "main": "script.js",
   "dependencies": {
-    "canvas": "^2.11.2",
-    "firebase": "^12.1.0"
+    "canvas": "^3.2.0",
+    "firebase": "^12.6.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
