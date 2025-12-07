@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mzansimeter.co.za/sitemap.xml
