@@ -184,17 +184,60 @@ body {
 }
 .footer-note { margin-top: 30px; font-size: 0.85rem; color: var(--text-color); opacity: 0.6; }
 
-/* --- Game Screen --- */
+/* --- Game Screen Header & Controls --- */
 .game-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 0;
     margin-bottom: 15px;
+    /* Ensure it doesn't crush vertically */
+    min-height: 50px;
 }
 
-#score-streak { font-size: 1.2rem; font-weight: 700; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 0.5px; }
-#score-streak span { color: var(--text-color); }
+/* Stats Block */
+#score-streak {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto; /* Pushes it to the right, but before buttons */
+}
+
+/* Reset Mute/Theme Buttons to flow naturally */
+#mute-button, #theme-toggle {
+    position: static;
+    margin-left: 10px;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    /* Ensure sufficient size for touch */
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    font-size: 1.2rem;
+}
+
+/* New mini-button style for leaderboard */
+.icon-button-small {
+    background: none;
+    border: 2px solid var(--border-color);
+    border-radius: 50%; /* Circle */
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    color: var(--text-color); /* Ensure emoji/text is visible */
+    margin-left: 10px;
+}
+
+.icon-button-small:hover {
+    background-color: var(--border-color);
+    transform: scale(1.1);
+}
 
 .action-button.small {
     padding: 10px 16px;
@@ -249,10 +292,12 @@ body {
     }
 
     #game-container {
-        padding: 8px; /* Reduced from 16px for better vertical fit */
-        height: 100vh; /* Fallback */
-        height: 100dvh; /* Full dynamic viewport height */
-        max-height: none;
+        /* Use dvh for actual visible screen height */
+        height: 95dvh;
+        max-height: 95dvh;
+        /* Ensure container itself doesn't scroll, inner elements might */
+        overflow: hidden;
+        padding: 15px; /* Breathable spacing */
         border-radius: 0; /* Full screen on mobile usually looks better without corners or small radius */
         width: 100%;
         max-width: 100%;
@@ -267,9 +312,9 @@ body {
     }
 
     #card {
-        min-height: auto; /* Let flex handle height */
-        margin-bottom: 8px; /* Reduced from 12px */
-        flex-grow: 1; /* Maximize card space */
+        flex-grow: 1; /* Fill available space */
+        min-height: 0; /* Allow shrinking if needed */
+        margin-bottom: 15px;
         flex-shrink: 1;
         display: flex;
         flex-direction: column;
@@ -296,12 +341,7 @@ body {
     .seo-text { display: none; }
 
     /* Game Screen Mobile Adjustments */
-    .game-header {
-        margin-bottom: 8px;
-        padding-right: 110px; /* Increased to prevent overlap with top controls */
-    }
-    #lives-display { font-size: 1rem; margin-right: 10px; }
-    #score-streak { font-size: 0.8rem; }
+    #lives-display { font-size: 1rem; margin-right: 0; }
 
     .action-button.small { padding: 6px 10px; margin-bottom: 8px; font-size: 0.75rem; }
 
@@ -325,9 +365,6 @@ body {
 
     #presented-value { font-size: 1.6rem; }
 
-    #buttons-container { gap: 10px; padding-bottom: 5px; flex-shrink: 0; }
-    .choice-button { padding: 12px; font-size: 1rem; }
-
     /* End Screen Mobile Adjustments */
     #end-screen { justify-content: flex-start; padding-top: 40px; } /* Start from top to ensure scroll if needed, but aim for fit */
     #final-score-title { font-size: 1.2rem; }
@@ -339,19 +376,6 @@ body {
     #reveal-correct-answer { font-size: 1.1rem; }
 
     #ad-container { margin: 10px 0; padding: 5px; min-height: 80px; }
-
-    /* Tighter top controls for mobile */
-    #top-controls {
-        top: 10px;
-        right: 10px;
-        gap: 8px;
-    }
-    .icon-button {
-        width: 36px;
-        height: 36px;
-        font-size: 1.2rem;
-        padding: 6px;
-    }
 }
 
 @media (max-height: 680px) {
@@ -501,11 +525,20 @@ body {
 
 #presented-value { font-size: 2.5rem; font-weight: 800; }
 
-#buttons-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+#buttons-container {
+    display: flex;
+    flex-direction: row; /* Side by side */
+    gap: 15px;
+    width: 100%;
+    margin-top: auto; /* Sticks to bottom */
+    padding-top: 10px;
+}
 
 .choice-button {
-    padding: 22px;
-    font-size: 1.4rem;
+    flex: 1; /* Each button takes 50% width */
+    width: auto; /* Reset fixed width */
+    padding: 20px; /* Good touch target */
+    font-size: 1.3rem; /* Slightly smaller text */
     font-weight: 700;
     border: none;
     border-radius: 16px;
@@ -520,6 +553,7 @@ body {
     box-shadow: 0 4px 10px var(--shadow-color);
     position: relative;
     overflow: hidden;
+    margin-bottom: 0; /* Container handles spacing */
 }
 
 .choice-button:hover {
@@ -950,48 +984,10 @@ body {
     background-color: var(--blue-color);
 }
 
-/* --- Top Controls (Theme & Mute) --- */
-#top-controls {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    display: flex;
-    gap: 12px;
-    z-index: 100;
-}
-
-.icon-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s;
-    padding: 8px;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    box-shadow: 0 2px 8px var(--shadow-color);
-}
-
-.icon-button:hover {
-    transform: scale(1.1);
-    background-color: var(--bg-color);
-}
-
-.icon-button:active {
-    transform: scale(0.95);
-}
-
 /* --- Lives Display --- */
 #lives-display {
     font-size: 1.4rem;
     letter-spacing: 2px;
-    margin-right: 15px;
     filter: drop-shadow(0 2px 4px var(--shadow-color));
 }
 
@@ -999,7 +995,7 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
-    padding-right: 60px; /* Prevent overlap with mute button */
+    padding-right: 0; /* Removed explicit padding */
     align-items: center;
 }
 
@@ -1031,3 +1027,6 @@ body {
 .legal-links a:hover {
     opacity: 1;
 }
+
+/* --- Top Controls (Theme & Mute) - Removed as they are now in header --- */
+/* Kept empty or removed to ensure no ghost styles interfere */

@@ -17,12 +17,6 @@
         <!-- Optional: Add a CSS spinner animation here -->
     </div>
     <div id="game-container">
-        <!-- Persistent Controls -->
-        <div id="top-controls">
-            <button id="theme-toggle" class="icon-button" aria-label="Toggle Theme">🌓</button>
-            <button id="mute-button" class="icon-button" aria-label="Toggle Sound">🔊</button>
-        </div>
-
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
             <div class="logo">
@@ -50,9 +44,18 @@
         <div id="game-screen" class="screen">
             <div class="game-header">
                 <div id="lives-display">❤️❤️❤️</div>
-                <div id="score-streak">Score: <span id="current-score">0</span> | Streak: <span id="current-streak">0</span></div>
+
+                <button id="game-leaderboard-button" class="icon-button-small" aria-label="Leaderboard">🏆</button>
+
+                <div id="score-streak" style="text-align: right; line-height: 1.2;">
+                    <div style="font-size: 1.1rem; font-weight: 900;"><span id="current-score">0</span> <span style="font-size: 0.8rem; font-weight: 400;">Score</span></div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;"><span id="current-streak">0</span> <span style="font-size: 0.7rem;">Streak</span></div>
+                </div>
+
+                <button id="theme-toggle" class="icon-button" aria-label="Toggle Theme">🌓</button>
+                <button id="mute-button" class="icon-button" aria-label="Toggle Sound">🔊</button>
             </div>
-            <button id="game-leaderboard-button" class="action-button secondary small">Leaderboard</button>
+
             <div id="card">
                 <div id="card-inner">
                     <div id="card-front">
@@ -168,4 +171,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-<!-- Triggering deployment -->
