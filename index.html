@@ -41,8 +41,10 @@
             <div class="menu-buttons">
                 <button id="start-button" class="action-button">Endless Mode</button>
                 <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
-                <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
-                <button id="how-to-play-button" class="action-button secondary">How to Play</button>
+                <div style="display: flex; gap: 10px;">
+                    <button id="leaderboard-button" class="action-button secondary" style="flex: 1;">Leaderboard</button>
+                    <button id="how-to-play-button" class="action-button secondary" style="flex: 1;">How to Play</button>
+                </div>
             </div>
 
             <div class="footer-note">
@@ -61,15 +63,19 @@
             <div class="game-header">
                 <div id="lives-display">❤️❤️❤️</div>
 
-                <div id="score-streak" style="text-align: right; line-height: 1.2;">
-                    <div style="font-size: 1.1rem; font-weight: 900;"><span id="current-score">0</span> <span style="font-size: 0.8rem; font-weight: 400;">Score</span></div>
-                    <div style="font-size: 0.9rem; opacity: 0.8;"><span id="current-streak">0</span> <span style="font-size: 0.7rem;">Streak</span></div>
-                </div>
-
                 <div style="display: flex; gap: 8px; margin-left: auto; margin-right: 10px;">
                     <button id="game-leaderboard-button" class="icon-button-small" aria-label="Leaderboard">🏆</button>
                     <button id="theme-toggle-game" class="icon-button-small" aria-label="Toggle Theme">🌓</button>
                     <button id="mute-button-game" class="icon-button-small" aria-label="Toggle Sound">🔊</button>
+                </div>
+
+                <div id="score-streak" style="text-align: right; line-height: 1.2;">
+                    <div style="font-size: 1.1rem; font-weight: 900;">
+                        <span id="current-score">0</span> <span style="font-size: 0.8rem; font-weight: 400;">Score</span>
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">
+                        <span id="current-streak">0</span> <span style="font-size: 0.7rem;">Streak</span>
+                    </div>
                 </div>
             </div>
 

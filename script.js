@@ -195,11 +195,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- Mute Logic (Handle both buttons) ---
+        // --- 1. Theme Logic (New) ---
+        // Select both toggle buttons (Start screen & Game screen)
+        const themeBtns = [
+            document.getElementById('theme-toggle-start'),
+            document.getElementById('theme-toggle-game') // Ensure you add this ID to game screen HTML if needed
+        ];
+
+        // Check saved preference
+        const savedTheme = localStorage.getItem('mzansiTheme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('mzansiTheme', isDark ? 'dark' : 'light');
+        }
+
+        // Attach listeners to all theme buttons found
+        themeBtns.forEach(btn => {
+            if (btn) btn.addEventListener('click', toggleTheme);
+        });
+
+        // --- 2. Mute Logic (Updated) ---
+        // Handle separate buttons for Start and Game screens to avoid ID conflicts
         const muteBtns = [
             document.getElementById('mute-button-start'),
-            document.getElementById('mute-button-game')
+            document.getElementById('mute-button-game') // Ensure you rename the game screen button ID
         ];
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            localStorage.setItem('mzansiMeterMuted', isMuted);
+            updateMuteButtons();
+        }
 
         function updateMuteButtons() {
             muteBtns.forEach(btn => {
@@ -210,33 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Attach listeners
+        // Attach listeners & Init
         muteBtns.forEach(btn => {
-            if (btn) btn.addEventListener('click', () => {
-                isMuted = !isMuted;
-                localStorage.setItem('mzansiMeterMuted', isMuted);
-                updateMuteButtons();
-            });
+            if (btn) btn.addEventListener('click', toggleMute);
         });
-
-        // Initialize state
         updateMuteButtons();
-
-        // --- Theme Logic (Handle both buttons) ---
-        const themeBtns = [
-            document.getElementById('theme-toggle-start'),
-            document.getElementById('theme-toggle-game')
-        ];
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('mzansiTheme', isDark ? 'dark' : 'light');
-        }
-
-        themeBtns.forEach(btn => {
-            if (btn) btn.addEventListener('click', toggleTheme);
-        });
 
         // Initialize Daily Streak Badge
         checkStreak();
