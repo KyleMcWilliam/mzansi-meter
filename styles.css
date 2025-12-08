@@ -52,27 +52,27 @@
     }
 }
 
-:root[data-theme="dark"] {
-    /* Dark Mode Variables - Duplicate to force override */
+/* Class-based Dark Mode Override */
+body.dark-mode {
     --bg-color: #121212;
     --card-bg: #1E1E1E;
-    --primary-color: #009e60; /* Brighter Green for Dark Mode */
-    --primary-color-hover: #007A4D;
-    --secondary-color: #FFC107; /* Brighter Gold */
+    --primary-color: #009e60;
     --text-color: #E0E0E0;
-    --light-text: #FFFFFF;
-    --red-color: #FF5252; /* Brighter Red */
-    --blue-color: #448AFF;
     --border-color: #333333;
+    --input-bg: #2C2C2C;
+    --modal-content-bg: #1E1E1E;
+    /* ... map other dark variables here ... */
+    --primary-color-hover: #007A4D;
+    --secondary-color: #FFC107;
+    --light-text: #FFFFFF;
+    --red-color: #FF5252;
+    --blue-color: #448AFF;
     --shadow-color: rgba(0, 0, 0, 0.5);
     --hover-shadow: rgba(0, 0, 0, 0.7);
-    --input-bg: #2C2C2C;
     --toast-bg: #333333;
     --modal-bg: rgba(0, 0, 0, 0.8);
-    --modal-content-bg: #1E1E1E;
 
-    /* Gradients Dark */
-    --body-gradient: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
+    background-image: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
     --card-front-gradient: radial-gradient(circle, #2a2a2a, #1e1e1e);
     --button-higher-gradient: linear-gradient(145deg, #0a3d2e, #1a1a1a);
     --button-lower-gradient: linear-gradient(145deg, #4a1c1c, #1a1a1a);
@@ -95,32 +95,33 @@ body {
 
 #game-container {
     width: 100%;
-    max-width: 420px; /* Slightly wider */
+    max-width: 420px;
     background: var(--card-bg);
     border-radius: 24px;
     box-shadow: 0 20px 40px var(--shadow-color);
-    padding: 35px;
+    padding: 25px; /* Reduced from 35px to save space */
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: hidden; /* Prevents scrollbars on the container itself */
     position: relative;
+    display: flex;
+    flex-direction: column;
+    /* FORCE FIT: Ensure it never exceeds screen height on PC */
+    max-height: 90vh;
+    height: auto;
     text-align: center;
     perspective: 1000px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     backdrop-filter: blur(10px); /* Glassmorphism effect */
     -webkit-backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Fallback for older browsers */
-    height: 100dvh; /* Dynamic viewport height for mobile */
-    max-height: 850px; /* Increased max height */
 }
 
-/* On larger screens, make the container pop more */
+/* On Desktop specifically */
 @media (min-width: 768px) {
     #game-container {
         max-width: 450px;
         box-shadow: 0 30px 60px var(--shadow-color);
-        display: block;
+        /* Keep it centered and contained */
+        margin: auto;
     }
 }
 
@@ -169,9 +170,61 @@ body {
 }
 
 /* --- Start Screen --- */
-.logo h1 { font-size: 3.5rem; font-weight: 900; line-height: 0.95; margin: 0; color: var(--text-color); letter-spacing: -1px; }
+/* --- NEW START HEADER --- */
+.start-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Push buttons to right */
+    margin-bottom: 10px;
+    height: 40px;
+}
+
+.utility-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Reuse your existing .icon-button-small, ensuring it has these properties: */
+.icon-button-small {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    color: var(--text-color);
+    padding: 0;
+    margin-left: 0; /* Override previous margin-left: 10px */
+}
+
+.icon-button-small:hover {
+    background-color: var(--border-color);
+    transform: scale(1.05);
+}
+
+/* --- LOGO COMPACTING --- */
+.logo h1 {
+    font-size: 3rem; /* Reduced from 3.5rem */
+    line-height: 0.9;
+    margin: 0;
+    font-weight: 900;
+    color: var(--text-color);
+    letter-spacing: -1px;
+}
 .logo span { color: var(--primary-color); }
-.logo p { font-size: 1.1rem; margin: 10px 0 35px; color: var(--text-color); opacity: 0.8; font-weight: 500; }
+.logo p {
+    font-size: 1rem;
+    margin: 5px 0 20px; /* Tighter margins */
+    color: var(--text-color);
+    opacity: 0.8;
+    font-weight: 500;
+}
+
 .high-score-display {
     background: var(--border-color);
     color: var(--text-color);
@@ -182,6 +235,36 @@ body {
     font-size: 0.9rem;
     letter-spacing: 0.5px;
 }
+
+/* Reuse .high-score-display style for streak */
+.streak-display {
+    background: var(--border-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    margin-bottom: 15px; /* Spacing between streak and high score */
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    display: inline-block; /* Ensure it wraps content */
+}
+
+/* --- MENU BUTTONS --- */
+.menu-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto; /* Allow internal scroll only if buttons don't fit */
+    max-height: 40vh; /* Safety limit */
+    padding-bottom: 5px; /* Prevent cut-off shadows */
+}
+
+.action-button {
+    margin-bottom: 0; /* Let flex gap handle spacing */
+    padding: 16px; /* Slightly more compact */
+}
+
 .footer-note { margin-top: 30px; font-size: 0.85rem; color: var(--text-color); opacity: 0.6; }
 
 /* --- Game Screen Header & Controls --- */
@@ -1000,16 +1083,9 @@ body {
 }
 
 /* --- SEO Text --- */
+/* Hide SEO text on Start Screen to save huge space (Google still reads hidden text) */
 .seo-text {
-    font-size: 0.8rem;
-    color: var(--text-color);
-    opacity: 0.7;
-    margin-top: 15px;
-    line-height: 1.4;
-    text-align: center;
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    display: none;
 }
 
 /* --- Legal Links --- */

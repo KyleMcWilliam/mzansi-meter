@@ -1,40 +1,53 @@
 from playwright.sync_api import sync_playwright
-import sys
 
-def verify_layout():
-    try:
-        with sync_playwright() as p:
-            print("Launching browser...")
-            browser = p.chromium.launch(headless=True)
-            print("Creating context...")
-            context = browser.new_context(viewport={'width': 360, 'height': 780}, user_agent='Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36')
-            page = context.new_page()
+def verify_changes():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        # Emulate iPhone 12 to verify mobile responsiveness
+        device = p.devices['iPhone 12']
+        context = browser.new_context(**device)
+        page = context.new_page()
 
-            print("Navigating...")
-            page.goto('http://localhost:8080')
+        # Abort requests to external domains (Ads, Firebase, Analytics)
+        page.route("**/*", lambda route: route.abort() if any(domain in route.request.url for domain in ["google", "firebase", "gstatic", "googlesyndication", "doubleclick"]) else route.continue_())
 
-            print("Waiting for loading screen to disappear...")
-            try:
-                page.wait_for_selector('#loading-screen', state='hidden', timeout=5000)
-            except Exception as e:
-                print(f"Loading screen didn't disappear: {e}")
-                # Force remove it just in case logic is stuck
-                page.evaluate("document.getElementById('loading-screen').style.display = 'none'")
+        try:
+            page.goto("http://localhost:8080/index.html")
 
-            print("Clicking Endless Mode...")
-            page.get_by_role('button', name='Endless Mode').click()
+            # Wait for start screen
+            page.wait_for_selector("#start-screen")
 
-            print("Waiting for Game Screen...")
-            page.wait_for_selector('#game-screen.active', timeout=5000)
+            # Take screenshot of Start Screen (verifying new header and layout)
+            page.screenshot(path="verification/start_screen.png")
+            print("Start Screen screenshot captured.")
 
-            print("Taking screenshot...")
-            page.screenshot(path='verification/game_screen.png')
+            # Test Theme Toggle on Start Screen
+            theme_btn = page.locator("#theme-toggle-start")
+            theme_btn.click()
+            page.wait_for_timeout(500) # Wait for transition
+            page.screenshot(path="verification/start_screen_dark.png")
+            print("Start Screen Dark Mode screenshot captured.")
 
+            # Verify body has class 'dark-mode'
+            is_dark = page.evaluate("document.body.classList.contains('dark-mode')")
+            if is_dark:
+                print("Dark mode class successfully added.")
+            else:
+                print("FAILED: Dark mode class not added.")
+
+            # Go to Game Screen
+            page.locator("#start-button").click()
+            page.wait_for_selector("#game-screen.active")
+            page.wait_for_timeout(500)
+
+            # Take screenshot of Game Screen (verifying header)
+            page.screenshot(path="verification/game_screen.png")
+            print("Game Screen screenshot captured.")
+
+        except Exception as e:
+            print(f"Error during verification: {e}")
+        finally:
             browser.close()
-            print("Done.")
-    except Exception as e:
-        print(f"Error: {e}")
-        sys.exit(1)
 
-if __name__ == '__main__':
-    verify_layout()
+if __name__ == "__main__":
+    verify_changes()

@@ -50,19 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealQuestionText = document.getElementById('reveal-question-text');
     const revealCorrectAnswer = document.getElementById('reveal-correct-answer');
 
-    // NEW: Mute Button
-    const muteButton = document.getElementById('mute-button');
+    // NEW: Mute Button Logic
     let isMuted = localStorage.getItem('mzansiMeterMuted') === 'true';
     let lastClickCoordinates = { x: 0, y: 0 }; // Store coordinates for floating text
 
-    // Theme Toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const storedTheme = localStorage.getItem('mzansiMeterTheme');
+    // Theme Toggle Logic
+    const storedTheme = localStorage.getItem('mzansiTheme'); // Updated key as per request or stick to old key? User snippet says 'mzansiTheme'
 
     // Apply stored theme immediately
-    if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-        updateThemeIcon(storedTheme);
+    if (storedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
     }
 
     const hadedaSound = document.getElementById('wrong-answer-hadeda');
@@ -144,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function init() {
-        updateMuteButton(); // Set initial state
         highScoreStartDisplay.textContent = highScore;
 
         // Add click sound to all buttons
@@ -199,14 +195,54 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Mute Toggle Listener
-        muteButton.addEventListener('click', toggleMute);
+        // --- Mute Logic (Handle both buttons) ---
+        const muteBtns = [
+            document.getElementById('mute-button-start'),
+            document.getElementById('mute-button-game')
+        ];
 
-        // Theme Toggle Listener
-        themeToggle.addEventListener('click', toggleTheme);
+        function updateMuteButtons() {
+            muteBtns.forEach(btn => {
+                if (btn) {
+                    btn.textContent = isMuted ? '🔇' : '🔊';
+                    btn.setAttribute('aria-label', isMuted ? 'Unmute Sound' : 'Mute Sound');
+                }
+            });
+        }
 
-    // Hide loading screen once initialized
-    document.getElementById('loading-screen').style.display = 'none';
+        // Attach listeners
+        muteBtns.forEach(btn => {
+            if (btn) btn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                localStorage.setItem('mzansiMeterMuted', isMuted);
+                updateMuteButtons();
+            });
+        });
+
+        // Initialize state
+        updateMuteButtons();
+
+        // --- Theme Logic (Handle both buttons) ---
+        const themeBtns = [
+            document.getElementById('theme-toggle-start'),
+            document.getElementById('theme-toggle-game')
+        ];
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('mzansiTheme', isDark ? 'dark' : 'light');
+        }
+
+        themeBtns.forEach(btn => {
+            if (btn) btn.addEventListener('click', toggleTheme);
+        });
+
+        // Initialize Daily Streak Badge
+        checkStreak();
+
+        // Hide loading screen once initialized
+        document.getElementById('loading-screen').style.display = 'none';
     }
 
     // --- Game Flow ---
@@ -348,6 +384,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                            .where('date', '==', dateStr)
                                            .orderBy('score', 'desc')
                                            .limit(10);
+
+                    const today = getYYYYMMDD();
+                    const lastPlay = localStorage.getItem('lastDailyDate');
+
+                    // Only increment if they haven't played today already
+                    if (lastPlay !== today) {
+                        let streak = parseInt(localStorage.getItem('currentStreak') || '0');
+                        streak++;
+                        localStorage.setItem('currentStreak', streak);
+                        localStorage.setItem('lastDailyDate', today);
+                        showToast(`🔥 Daily Streak: ${streak}!`, 'success');
+                    }
                 } else {
                     leaderboardQuery = db.collection('leaderboard')
                                            .orderBy('score', 'desc')
@@ -798,54 +846,6 @@ function nextQuestion() {
         audioElement.play().catch(e => console.log("Audio play failed:", e));
     }
 
-    function toggleMute() {
-        isMuted = !isMuted;
-        localStorage.setItem('mzansiMeterMuted', isMuted);
-        updateMuteButton();
-    }
-
-    function updateMuteButton() {
-        if (isMuted) {
-            muteButton.textContent = '🔇';
-            muteButton.setAttribute('aria-label', 'Unmute Sound');
-        } else {
-            muteButton.textContent = '🔊';
-            muteButton.setAttribute('aria-label', 'Mute Sound');
-        }
-    }
-
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        let newTheme = 'light';
-
-        if (currentTheme === 'dark') {
-            newTheme = 'light';
-        } else if (currentTheme === 'light') {
-            newTheme = 'dark';
-        } else {
-            // System preference was used, now we toggle
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                newTheme = 'light';
-            } else {
-                newTheme = 'dark';
-            }
-        }
-
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('mzansiMeterTheme', newTheme);
-        updateThemeIcon(newTheme);
-    }
-
-    function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            themeToggle.textContent = '☀️';
-            themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
-        } else {
-            themeToggle.textContent = '🌙';
-            themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
-        }
-    }
-
     function updateOgTags(score, title) {
         const ogTitle = `I scored ${score} on The Mzansi Meter!`;
         const ogDescription = `They call me "${title}". Think you can do better, boet?`;
@@ -933,6 +933,32 @@ function nextQuestion() {
                 container.removeChild(toast);
             }, 300); // Wait for transition to finish
         }, 3000);
+    }
+
+    function checkStreak() {
+        const today = getYYYYMMDD();
+        const lastPlay = localStorage.getItem('lastDailyDate');
+        let streak = parseInt(localStorage.getItem('currentStreak') || '0');
+        const badge = document.getElementById('daily-streak-badge');
+        const countSpan = document.getElementById('streak-count');
+
+        if (lastPlay) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            // If last played before yesterday, reset streak
+            if (lastPlay !== today && lastPlay !== yesterdayStr) {
+                streak = 0;
+                localStorage.setItem('currentStreak', 0);
+            }
+        }
+
+        // Show badge if streak > 0
+        if (streak > 0 && badge && countSpan) {
+            countSpan.textContent = streak;
+            badge.style.display = 'inline-block'; // Matches CSS .streak-display
+        }
     }
 
 });
