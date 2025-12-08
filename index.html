@@ -19,23 +19,39 @@
     <div id="game-container">
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
+
+            <div class="start-header">
+                <div class="utility-group">
+                    <button id="theme-toggle-start" class="icon-button-small" aria-label="Toggle Theme">🌓</button>
+                    <button id="mute-button-start" class="icon-button-small" aria-label="Toggle Sound">🔊</button>
+                </div>
+            </div>
+
             <div class="logo">
                 <img src="assets/favicon.svg" alt="Mzansi Meter Logo" style="width: 64px; height: 64px; margin-bottom: 10px;">
                 <h1>The<br><span>Mzansi</span><br>Meter</h1>
                 <p>The SA Guessing Game</p>
             </div>
+
+            <div id="daily-streak-badge" class="streak-display" style="display: none;">
+                🔥 <span id="streak-count">0</span> Day Streak
+            </div>
             <div class="high-score-display">High Score: <span id="high-score-start">0</span></div>
-            <button id="start-button" class="action-button">Endless Mode</button>
-            <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
-            <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
-            <button id="how-to-play-button" class="action-button secondary">How to Play</button>
+
+            <div class="menu-buttons">
+                <button id="start-button" class="action-button">Endless Mode</button>
+                <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
+                <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
+                <button id="how-to-play-button" class="action-button secondary">How to Play</button>
+            </div>
+
             <div class="footer-note">
                 🇿🇦 How lekker is your local knowledge? 🇿🇦
-                <div class="seo-text">
-                    <p>The Mzansi Meter is the ultimate South African guessing game! Test your knowledge of local prices, statistics, and fun facts. Can you guess if the real value is higher or lower? Play the Endless Mode for a high score or take on the Daily Challenge. It's free, fun, and purely South African.</p>
-                </div>
                 <div class="legal-links">
                     <a href="privacy.html" target="_blank">Privacy Policy</a>
+                </div>
+                <div class="seo-text">
+                    <p>The Mzansi Meter is the ultimate South African guessing game! Test your knowledge of local prices, statistics, and fun facts. Can you guess if the real value is higher or lower? Play the Endless Mode for a high score or take on the Daily Challenge. It's free, fun, and purely South African.</p>
                 </div>
             </div>
         </div>
@@ -45,15 +61,16 @@
             <div class="game-header">
                 <div id="lives-display">❤️❤️❤️</div>
 
-                <button id="game-leaderboard-button" class="icon-button-small" aria-label="Leaderboard">🏆</button>
-
                 <div id="score-streak" style="text-align: right; line-height: 1.2;">
                     <div style="font-size: 1.1rem; font-weight: 900;"><span id="current-score">0</span> <span style="font-size: 0.8rem; font-weight: 400;">Score</span></div>
                     <div style="font-size: 0.9rem; opacity: 0.8;"><span id="current-streak">0</span> <span style="font-size: 0.7rem;">Streak</span></div>
                 </div>
 
-                <button id="theme-toggle" class="icon-button" aria-label="Toggle Theme">🌓</button>
-                <button id="mute-button" class="icon-button" aria-label="Toggle Sound">🔊</button>
+                <div style="display: flex; gap: 8px; margin-left: auto; margin-right: 10px;">
+                    <button id="game-leaderboard-button" class="icon-button-small" aria-label="Leaderboard">🏆</button>
+                    <button id="theme-toggle-game" class="icon-button-small" aria-label="Toggle Theme">🌓</button>
+                    <button id="mute-button-game" class="icon-button-small" aria-label="Toggle Sound">🔊</button>
+                </div>
             </div>
 
             <div id="card">
