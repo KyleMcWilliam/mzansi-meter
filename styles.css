@@ -110,9 +110,9 @@ body {
     -webkit-backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
-    height: 90vh; /* Fixed height for absolute positioning of children */
-    max-height: 800px; /* Max height constraint */
-    min-height: 600px; /* Minimum height constraint */
+    height: 100vh; /* Fallback for older browsers */
+    height: 100dvh; /* Dynamic viewport height for mobile */
+    max-height: 850px; /* Increased max height */
 }
 
 /* On larger screens, make the container pop more */
@@ -206,7 +206,7 @@ body {
 
 #card {
     width: 100%;
-    min-height: 450px; /* Default height for larger screens */
+    min-height: 350px; /* Reduced min-height to be more flexible */
     margin-bottom: 25px;
     position: relative;
     flex-grow: 1;
@@ -243,70 +243,125 @@ body {
 /* Mobile responsive adjustments */
 @media (max-width: 767px) {
     body {
-        align-items: flex-start; /* Align to top on mobile */
-        padding: 10px;
+        align-items: center; /* Center vertically if possible, but dvh handles height */
+        padding: 0;
+        background-attachment: fixed; /* Prevent background scroll glitches */
     }
 
     #game-container {
-        padding: 20px;
-        height: 95vh; /* Force full height on mobile */
-        max-height: 98vh;
-        border-radius: 16px;
+        padding: 16px;
+        height: 100vh; /* Fallback */
+        height: 100dvh; /* Full dynamic viewport height */
+        max-height: none;
+        border-radius: 0; /* Full screen on mobile usually looks better without corners or small radius */
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Ensure screen content is vertically centered */
+    .screen {
+        padding: 10px;
+        justify-content: center; /* Try to center content vertically */
     }
 
     #card {
-        min-height: 200px; /* Ensure it doesn't collapse completely */
-        margin-bottom: 15px;
-        flex-shrink: 1; /* Allow it to shrink if needed */
+        min-height: auto; /* Let flex handle height */
+        margin-bottom: 12px;
+        flex-grow: 1; /* Maximize card space */
+        flex-shrink: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     #card-inner {
-        min-height: 0;
+        height: 100%;
+        flex-grow: 1;
+    }
+
+    #card-front, #card-back {
+        padding: 16px;
+        height: 100%;
+        justify-content: space-between;
     }
 
     /* Start Screen Mobile Adjustments */
-    .logo h1 { font-size: 2.5rem; }
-    .logo p { margin: 5px 0 20px; font-size: 1rem; }
-    .high-score-display { margin-bottom: 15px; padding: 8px 16px; }
-    .action-button { padding: 14px; margin-bottom: 10px; font-size: 1rem; }
-    .footer-note { margin-top: 15px; display: block; } /* Show footer note on small screens */
+    .logo h1 { font-size: 2.2rem; margin-bottom: 5px; }
+    .logo p { margin: 0 0 15px; font-size: 0.95rem; }
+    .high-score-display { margin-bottom: 15px; padding: 6px 14px; font-size: 0.85rem; }
+    .action-button { padding: 12px; margin-bottom: 8px; font-size: 0.95rem; }
+    .footer-note { margin-top: 10px; font-size: 0.75rem; }
+    /* Hide SEO text on mobile to save space, it's for bots anyway */
+    .seo-text { display: none; }
 
     /* Game Screen Mobile Adjustments */
-    .game-header { margin-bottom: 10px; }
-    .action-button.small { padding: 8px 12px; margin-bottom: 10px; font-size: 0.8rem; }
+    .game-header { margin-bottom: 8px; padding-right: 50px; }
+    #lives-display { font-size: 1.1rem; margin-right: 10px; }
+    #score-streak { font-size: 0.8rem; }
+
+    .action-button.small { padding: 6px 10px; margin-bottom: 8px; font-size: 0.75rem; }
 
     #question-image-container {
-        max-height: 100px; /* Smaller image on mobile */
-        margin-bottom: 10px;
+        max-height: 100px;
+        flex-shrink: 1; /* Allow shrinking */
+        margin-bottom: 8px;
     }
 
     #question-text {
-        font-size: 1rem;
-        margin-bottom: 10px;
-        line-height: 1.3;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+        line-height: 1.25;
+        flex-grow: 1;
     }
 
     .presented-value-container {
-        padding: 8px 20px;
-        margin-bottom: 10px;
+        padding: 8px 16px;
+        margin-bottom: 8px;
     }
 
-    #presented-value { font-size: 1.8rem; }
+    #presented-value { font-size: 1.6rem; }
 
-    #buttons-container { gap: 10px; }
-    .choice-button { padding: 15px; font-size: 1.1rem; }
+    #buttons-container { gap: 10px; padding-bottom: 5px; flex-shrink: 0; }
+    .choice-button { padding: 14px; font-size: 1rem; }
 
     /* End Screen Mobile Adjustments */
-    #final-score { font-size: 4rem; }
-    #final-score-container { margin: 10px 0; }
-    #graded-title-container { padding: 8px 16px; margin-bottom: 15px; }
-    #answer-reveal-container { padding: 12px; margin-bottom: 15px; }
-    #reveal-correct-answer { font-size: 1.2rem; }
+    #end-screen { justify-content: flex-start; padding-top: 40px; } /* Start from top to ensure scroll if needed, but aim for fit */
+    #final-score-title { font-size: 1.2rem; }
+    #final-score { font-size: 3rem; margin: 5px 0; }
+    #final-score-container { margin: 5px 0; }
+    #graded-title-container { padding: 6px 14px; margin-bottom: 10px; font-size: 0.9rem; }
+    #answer-reveal-container { padding: 10px; margin-bottom: 10px; }
+    #reveal-question-text { font-size: 0.85rem; }
+    #reveal-correct-answer { font-size: 1.1rem; }
+
+    #ad-container { margin: 10px 0; padding: 5px; min-height: 80px; }
 }
 
-@media (max-height: 600px) {
-    .logo h1 { font-size: 2rem; }
-    #question-image-container { display: none !important; } /* Hide image on very short screens */
+@media (max-height: 680px) {
+    /* Optimization for iPhone SE and similar short screens */
+    .screen { padding: 10px 5px; } /* Reduce side padding */
+    .logo h1 { font-size: 1.8rem; }
+    .action-button { padding: 10px; margin-bottom: 6px; }
+
+    /* Start Screen Compact */
+    .high-score-display { margin-bottom: 10px; padding: 4px 10px; }
+    .logo p { margin-bottom: 10px; }
+
+    /* Game Screen Compact */
+    #question-image-container { display: none !important; } /* Hide image to save space */
+    #card { margin-bottom: 10px; }
+    #buttons-container { padding-bottom: 0; }
+
+    /* End Screen Compact */
+    #end-screen { padding-top: 10px; justify-content: center; } /* Center it since it's smaller */
+    #final-score { font-size: 2.5rem; margin: 0; }
+    #final-score-title { font-size: 1rem; margin-bottom: 5px; }
+    #graded-title-container { padding: 4px 12px; margin-bottom: 8px; font-size: 0.8rem; }
+    #answer-reveal-container { padding: 8px; margin-bottom: 8px; }
+    #ad-container { margin: 5px 0; min-height: 60px; }
+
+    .footer-note { margin-top: 5px; font-size: 0.7rem; }
 }
 
 #card-front {
