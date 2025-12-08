@@ -24,63 +24,26 @@
     --button-lower-gradient: linear-gradient(145deg, #fdeeee, #ffffff);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-        /* Dark Mode Variables */
-        --bg-color: #121212;
-        --card-bg: #1E1E1E;
-        --primary-color: #009e60; /* Brighter Green for Dark Mode */
-        --primary-color-hover: #007A4D;
-        --secondary-color: #FFC107; /* Brighter Gold */
-        --text-color: #E0E0E0;
-        --light-text: #FFFFFF;
-        --red-color: #FF5252; /* Brighter Red */
-        --blue-color: #448AFF;
-        --border-color: #333333;
-        --shadow-color: rgba(0, 0, 0, 0.5);
-        --hover-shadow: rgba(0, 0, 0, 0.7);
-        --input-bg: #2C2C2C;
-        --toast-bg: #333333;
-        --modal-bg: rgba(0, 0, 0, 0.8);
-        --modal-content-bg: #1E1E1E;
-
-        /* Gradients Dark */
-        --body-gradient: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
-        --card-front-gradient: radial-gradient(circle, #2a2a2a, #1e1e1e);
-        --button-higher-gradient: linear-gradient(145deg, #0a3d2e, #1a1a1a);
-        --button-lower-gradient: linear-gradient(145deg, #4a1c1c, #1a1a1a);
-    }
-}
-
-/* Class-based Dark Mode Override */
+/* Dark Mode Class Override */
 body.dark-mode {
     --bg-color: #121212;
     --card-bg: #1E1E1E;
     --primary-color: #009e60;
     --text-color: #E0E0E0;
     --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.5);
     --input-bg: #2C2C2C;
     --modal-content-bg: #1E1E1E;
-    /* ... map other dark variables here ... */
-    --primary-color-hover: #007A4D;
-    --secondary-color: #FFC107;
-    --light-text: #FFFFFF;
-    --red-color: #FF5252;
-    --blue-color: #448AFF;
-    --shadow-color: rgba(0, 0, 0, 0.5);
-    --hover-shadow: rgba(0, 0, 0, 0.7);
-    --toast-bg: #333333;
-    --modal-bg: rgba(0, 0, 0, 0.8);
-
-    background-image: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
+    --body-gradient: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
     --card-front-gradient: radial-gradient(circle, #2a2a2a, #1e1e1e);
     --button-higher-gradient: linear-gradient(145deg, #0a3d2e, #1a1a1a);
     --button-lower-gradient: linear-gradient(145deg, #4a1c1c, #1a1a1a);
 }
 
+/* --- 1. BASE LAYOUT (Desktop First Principle) --- */
 body {
     font-family: 'Poppins', sans-serif;
-    background: var(--bg-color); /* Fallback */
+    background: var(--bg-color);
     background-image: var(--body-gradient);
     color: var(--text-color);
     display: flex;
@@ -88,95 +51,55 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 15px;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.3s ease, color 0.3s ease;
+    overflow: hidden; /* Prevent body scroll */
 }
 
 #game-container {
-    width: 100%;
-    max-width: 420px;
+    /* FIXED DESKTOP SIZE: Looks like a phone on your desk */
+    width: 400px;
+    height: 700px;
+    max-height: 90vh;
+    min-height: 550px;
+
     background: var(--card-bg);
     border-radius: 24px;
-    box-shadow: 0 20px 40px var(--shadow-color);
-    padding: 25px; /* Reduced from 35px to save space */
-    box-sizing: border-box;
-    overflow: hidden; /* Prevents scrollbars on the container itself */
+    box-shadow: 0 30px 60px var(--shadow-color);
     position: relative;
     display: flex;
     flex-direction: column;
-    /* FORCE FIT: Ensure it never exceeds screen height on PC */
-    max-height: 90vh;
-    height: auto;
-    text-align: center;
-    perspective: 1000px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    backdrop-filter: blur(10px); /* Glassmorphism effect */
-    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    padding: 25px;
+    box-sizing: border-box;
 }
 
-/* On Desktop specifically */
-@media (min-width: 768px) {
-    #game-container {
-        max-width: 450px;
-        box-shadow: 0 30px 60px var(--shadow-color);
-        /* Keep it centered and contained */
-        margin: auto;
-    }
-}
-
+/* --- 2. SCREEN COMPOSITION --- */
 .screen {
     display: none;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
-    overflow-y: auto; /* Allow scrolling within screen if needed */
-    padding: 20px;
-    box-sizing: border-box;
+    /* No padding here, container handles it */
 }
 
 .screen.active {
     display: flex;
-    z-index: 10;
+    animation: fadeIn 0.3s ease-out;
 }
 
-/* Slide Transitions */
-.slide-up-enter { animation: slideUpEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.slide-up-exit { animation: slideUpExit 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.slide-down-enter { animation: slideDownEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.slide-down-exit { animation: slideDownExit 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-@keyframes slideUpEnter {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-@keyframes slideUpExit {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-100%); opacity: 0; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideDownEnter {
-    from { transform: translateY(-100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-@keyframes slideDownExit {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(100%); opacity: 0; }
-}
-
-/* --- Start Screen --- */
-/* --- NEW START HEADER --- */
-.start-header {
+/* --- 3. HEADERS & UTILITIES --- */
+.start-header, .game-header {
+    flex-shrink: 0;
     width: 100%;
+    min-height: 40px;
+    margin-bottom: 15px;
     display: flex;
-    justify-content: flex-end; /* Push buttons to right */
-    margin-bottom: 10px;
-    height: 40px;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .utility-group {
@@ -184,7 +107,6 @@ body {
     gap: 10px;
 }
 
-/* Reuse your existing .icon-button-small, ensuring it has these properties: */
 .icon-button-small {
     background: transparent;
     border: 1px solid var(--border-color);
@@ -196,10 +118,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.2s ease;
     color: var(--text-color);
+    transition: all 0.2s ease;
     padding: 0;
-    margin-left: 0; /* Override previous margin-left: 10px */
 }
 
 .icon-button-small:hover {
@@ -207,136 +128,20 @@ body {
     transform: scale(1.05);
 }
 
-/* --- LOGO COMPACTING --- */
-.logo h1 {
-    font-size: 3rem; /* Reduced from 3.5rem */
-    line-height: 0.9;
-    margin: 0;
-    font-weight: 900;
-    color: var(--text-color);
-    letter-spacing: -1px;
-}
-.logo span { color: var(--primary-color); }
-.logo p {
-    font-size: 1rem;
-    margin: 5px 0 20px; /* Tighter margins */
-    color: var(--text-color);
-    opacity: 0.8;
-    font-weight: 500;
-}
-
-.high-score-display {
-    background: var(--border-color);
-    color: var(--text-color);
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-/* Reuse .high-score-display style for streak */
-.streak-display {
-    background: var(--border-color);
-    color: var(--text-color);
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: 700;
-    margin-bottom: 15px; /* Spacing between streak and high score */
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-    display: inline-block; /* Ensure it wraps content */
-}
-
-/* --- MENU BUTTONS --- */
-.menu-buttons {
-    width: 100%;
+/* --- 4. CONTENT & CARD --- */
+.logo, #card {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    overflow-y: auto; /* Allow internal scroll only if buttons don't fit */
-    max-height: 40vh; /* Safety limit */
-    padding-bottom: 5px; /* Prevent cut-off shadows */
-}
-
-.action-button {
-    margin-bottom: 0; /* Let flex gap handle spacing */
-    padding: 16px; /* Slightly more compact */
-}
-
-.footer-note { margin-top: 30px; font-size: 0.85rem; color: var(--text-color); opacity: 0.6; }
-
-/* --- Game Screen Header & Controls --- */
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0;
-    margin-bottom: 15px;
-    /* Ensure it doesn't crush vertically */
-    min-height: 50px;
-}
-
-/* Stats Block */
-#score-streak {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: auto; /* Pushes it to the right, but before buttons */
-}
-
-/* Reset Mute/Theme Buttons to flow naturally */
-#mute-button, #theme-toggle {
-    position: static;
-    margin-left: 10px;
-    box-shadow: none;
-    border: 1px solid var(--border-color);
-    /* Ensure sufficient size for touch */
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    font-size: 1.2rem;
-}
-
-/* New mini-button style for leaderboard */
-.icon-button-small {
-    background: none;
-    border: 2px solid var(--border-color);
-    border-radius: 50%; /* Circle */
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.2s ease;
-    color: var(--text-color); /* Ensure emoji/text is visible */
-    margin-left: 10px;
-}
-
-.icon-button-small:hover {
-    background-color: var(--border-color);
-    transform: scale(1.1);
-}
-
-.action-button.small {
-    padding: 10px 16px;
-    font-size: 0.85rem;
-    width: auto;
-    margin-bottom: 15px;
-    border-radius: 8px;
-}
-
-#card {
     width: 100%;
-    min-height: 350px; /* Reduced min-height to be more flexible */
-    margin-bottom: 25px;
-    position: relative;
-    flex-grow: 1;
 }
+
+.logo img { margin-bottom: 10px; }
+.logo h1 { font-size: 3rem; line-height: 0.95; margin: 0; color: var(--text-color); }
+.logo span { color: var(--primary-color); }
+.logo p { margin: 10px 0 20px; font-size: 1.1rem; opacity: 0.8; }
 
 #card-inner {
     position: relative;
@@ -344,19 +149,16 @@ body {
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
-    display: flex;
 }
 
-#card.is-flipped #card-inner {
-    transform: rotateY(180deg);
-}
+#card.is-flipped #card-inner { transform: rotateY(180deg); }
 
 #card-front, #card-back {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     border-radius: 20px;
     box-sizing: border-box;
     display: flex;
@@ -366,743 +168,150 @@ body {
     box-shadow: 0 4px 15px var(--shadow-color);
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 767px) {
-    body {
-        align-items: center; /* Center vertically if possible, but dvh handles height */
-        padding: 0;
-        background-attachment: fixed; /* Prevent background scroll glitches */
-    }
-
-    #game-container {
-        /* Use dvh for actual visible screen height */
-        height: 95dvh;
-        max-height: 95dvh;
-        /* Ensure container itself doesn't scroll, inner elements might */
-        overflow: hidden;
-        padding: 15px; /* Breathable spacing */
-        border-radius: 0; /* Full screen on mobile usually looks better without corners or small radius */
-        width: 100%;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Ensure screen content is vertically centered */
-    .screen {
-        padding: 4px; /* Reduced from 10px */
-        justify-content: center; /* Try to center content vertically */
-    }
-
-    #card {
-        flex-grow: 1; /* Fill available space */
-        min-height: 0; /* Allow shrinking if needed */
-        margin-bottom: 15px;
-        flex-shrink: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    #card-inner {
-        height: 100%;
-        flex-grow: 1;
-    }
-
-    #card-front, #card-back {
-        padding: 12px; /* Reduced from 16px */
-        height: 100%;
-        justify-content: space-between;
-    }
-
-    /* Start Screen Mobile Adjustments */
-    .logo h1 { font-size: 2.2rem; margin-bottom: 5px; }
-    .logo p { margin: 0 0 15px; font-size: 0.95rem; }
-    .high-score-display { margin-bottom: 15px; padding: 6px 14px; font-size: 0.85rem; }
-    .action-button { padding: 12px; margin-bottom: 8px; font-size: 0.95rem; }
-    .footer-note { margin-top: 10px; font-size: 0.75rem; }
-    /* Hide SEO text on mobile to save space, it's for bots anyway */
-    .seo-text { display: none; }
-
-    /* Game Screen Mobile Adjustments */
-    #lives-display { font-size: 1rem; margin-right: 0; }
-
-    .action-button.small { padding: 6px 10px; margin-bottom: 8px; font-size: 0.75rem; }
-
-    #question-image-container {
-        max-height: 100px;
-        flex-shrink: 1; /* Allow shrinking */
-        margin-bottom: 8px;
-    }
-
-    #question-text {
-        font-size: 0.95rem;
-        margin-bottom: 8px;
-        line-height: 1.25;
-        flex-grow: 1;
-    }
-
-    .presented-value-container {
-        padding: 8px 16px;
-        margin-bottom: 8px;
-    }
-
-    #presented-value { font-size: 1.6rem; }
-
-    /* End Screen Mobile Adjustments */
-    #end-screen { justify-content: flex-start; padding-top: 40px; } /* Start from top to ensure scroll if needed, but aim for fit */
-    #final-score-title { font-size: 1.2rem; }
-    #final-score { font-size: 3rem; margin: 5px 0; }
-    #final-score-container { margin: 5px 0; }
-    #graded-title-container { padding: 6px 14px; margin-bottom: 10px; font-size: 0.9rem; }
-    #answer-reveal-container { padding: 10px; margin-bottom: 10px; }
-    #reveal-question-text { font-size: 0.85rem; }
-    #reveal-correct-answer { font-size: 1.1rem; }
-
-    #ad-container { margin: 10px 0; padding: 5px; min-height: 80px; }
-}
-
-@media (max-height: 680px) {
-    /* Optimization for iPhone SE and similar short screens */
-    .screen { padding: 10px 5px; } /* Reduce side padding */
-    .logo h1 { font-size: 1.8rem; }
-    .action-button { padding: 10px; margin-bottom: 6px; }
-
-    /* Start Screen Compact */
-    .high-score-display { margin-bottom: 10px; padding: 4px 10px; }
-    .logo p { margin-bottom: 10px; }
-
-    /* Game Screen Compact */
-    #question-image-container { display: none !important; } /* Hide image to save space */
-    #card { margin-bottom: 10px; }
-    #buttons-container { padding-bottom: 0; }
-
-    /* End Screen Compact */
-    #end-screen { padding-top: 10px; justify-content: center; } /* Center it since it's smaller */
-    #final-score { font-size: 2.5rem; margin: 0; }
-    #final-score-title { font-size: 1rem; margin-bottom: 5px; }
-    #graded-title-container { padding: 4px 12px; margin-bottom: 8px; font-size: 0.8rem; }
-    #answer-reveal-container { padding: 8px; margin-bottom: 8px; }
-    #ad-container { margin: 5px 0; min-height: 60px; }
-
-    .footer-note { margin-top: 5px; font-size: 0.7rem; }
-}
-
 #card-front {
-    background-color: var(--card-bg);
-    background-image: var(--card-front-gradient);
+    background: var(--card-front-gradient);
     border: 2px solid var(--border-color);
-    padding: 25px;
-    transition: border-color 0.3s ease;
+    padding: 20px;
 }
 
-/* Feedback Styles */
-#card-front.correct {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 20px rgba(0, 122, 77, 0.3);
-}
-
-#card-front.incorrect {
-    border-color: var(--red-color);
-    box-shadow: 0 0 20px rgba(222, 56, 49, 0.3);
-}
+#card-front.correct { border-color: var(--primary-color); box-shadow: 0 0 20px rgba(0, 122, 77, 0.3); }
+#card-front.incorrect { border-color: var(--red-color); box-shadow: 0 0 20px rgba(222, 56, 49, 0.3); }
 
 #card-back {
-    background-color: var(--primary-color);
     background-image: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-hover) 100%);
-    color: var(--light-text);
     transform: rotateY(180deg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
+    color: white;
 }
+#card-back .logo h1 { color: white; font-size: 2.5rem; }
 
-#card-back .logo h1 {
-    font-size: 3rem;
-    color: var(--light-text);
-}
-
-#card-back .logo span {
-    color: var(--secondary-color);
-}
-
-/* Timer Styles */
-#timer-container {
+/* --- 5. BUTTONS & ACTIONS --- */
+.menu-buttons, #buttons-container, .footer-note {
+    flex-shrink: 0;
     width: 100%;
-    height: 8px;
-    background-color: var(--border-color);
-    border-radius: 4px;
-    position: absolute;
-    top: 15px;
-    left: 25px;
-    right: 25px;
-    width: calc(100% - 50px);
-    overflow: hidden; /* Ensure rounded corners for child */
+    margin-top: auto;
 }
 
-#timer-bar {
-    width: 100%;
-    height: 100%;
-    background-color: var(--primary-color);
-    border-radius: 4px;
-    transform-origin: left;
-    transform: scaleX(1);
-    /* No default transition, animation is applied via JS/Class */
-}
-
-#timer-bar.animating {
-    animation: shrinkTimer 10s linear forwards;
-}
-
-@keyframes shrinkTimer {
-    0% {
-        transform: scaleX(1);
-        background-color: var(--primary-color);
-    }
-    50% {
-        background-color: var(--secondary-color);
-    }
-    100% {
-        transform: scaleX(0);
-        background-color: var(--red-color);
-    }
-}
-
-/* Image Styles */
-#question-image-container {
-    width: 100%;
-    max-height: 140px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    display: none;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px var(--shadow-color);
-}
-#question-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-#question-text {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.4;
-    margin-bottom: 20px;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-}
-
-.presented-value-container {
-    background: var(--text-color);
-    color: var(--bg-color); /* Inverted for contrast */
-    padding: 12px 30px;
-    border-radius: 16px;
-    margin-bottom: 10px;
-    box-shadow: 0 5px 15px var(--shadow-color);
-}
-
-#presented-value { font-size: 2.5rem; font-weight: 800; }
+.menu-buttons { gap: 12px; display: flex; flex-direction: column; padding-bottom: 5px; }
 
 #buttons-container {
     display: flex;
-    flex-direction: row; /* Side by side */
     gap: 15px;
-    width: 100%;
-    margin-top: auto; /* Sticks to bottom */
     padding-top: 10px;
 }
 
-.choice-button {
-    flex: 1; /* Each button takes 50% width */
-    width: auto; /* Reset fixed width */
-    padding: 20px; /* Good touch target */
-    font-size: 1.3rem; /* Slightly smaller text */
-    font-weight: 700;
+.action-button, .choice-button {
     border: none;
     border-radius: 16px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-    background: var(--card-bg);
-    border: 2px solid transparent; /* Prepare for border transition if needed */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    box-shadow: 0 4px 10px var(--shadow-color);
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 0; /* Container handles spacing */
-}
-
-.choice-button:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px var(--hover-shadow);
-}
-
-.choice-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 5px var(--shadow-color);
-}
-
-/* Button Press Effect for all action buttons */
-.action-button:active {
-    transform: scale(0.98);
-}
-
-#higher-button {
-    color: var(--primary-color);
-    background: var(--button-higher-gradient);
-    border: 1px solid rgba(0, 122, 77, 0.1);
-}
-
-#higher-button::before {
-    content: '';
-    width: 24px;
-    height: 24px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23007A4D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7l7-7 7 7"/></svg>');
-    background-repeat: no-repeat;
-    background-position: center;
-}
-/* Dark mode icon adjustment via CSS filter or swapping SVG color not easily done inline,
-   so we rely on the stroke color being set in the SVG data URI.
-   Ideally, we'd use an inline SVG in HTML, but for now we keep the CSS approach.
-*/
-
-#lower-button {
-    color: var(--red-color);
-    background: var(--button-lower-gradient);
-    border: 1px solid rgba(222, 56, 49, 0.1);
-}
-
-#lower-button::before {
-    content: '';
-    width: 24px;
-    height: 24px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DE3831" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7l7 7 7-7"/></svg>');
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* --- End Screen --- */
-#final-score-title { font-size: 1.4rem; font-weight: 700; color: var(--text-color); margin: 0; opacity: 0.8; }
-#final-score-container { color: var(--primary-color); margin: 15px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-#final-score-container p { font-size: 1.1rem; margin: 0; font-weight: 600; color: var(--text-color); }
-#final-score { font-size: 6rem; font-weight: 900; line-height: 1; letter-spacing: -3px; }
-
-#graded-title-container {
-    background: var(--secondary-color);
-    color: #262626; /* Keep text dark on gold */
-    padding: 12px 25px;
-    border-radius: 50px;
-    margin-bottom: 25px;
-    display: inline-block;
-    box-shadow: 0 4px 10px rgba(255, 182, 18, 0.3);
-}
-#graded-title-container p { margin: 0; font-weight: 700; font-size: 1.1rem; }
-
-/* Answer Reveal */
-#answer-reveal-container {
-    background: var(--bg-color); /* Slightly different from card bg */
-    width: 100%;
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    border: 1px solid var(--border-color);
-}
-#reveal-question-text {
-    font-size: 0.95rem;
-    color: var(--text-color);
-    opacity: 0.7;
-    margin: 0 0 8px 0;
-    font-style: italic;
-}
-#reveal-correct-answer {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--primary-color);
-}
-
-
-/* --- Correct Answer Popup --- */
-#answer-popup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 122, 77, 0.95);
-    color: var(--light-text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1.5rem;
     font-weight: 700;
-    padding: 20px;
-    border-radius: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 10;
-    pointer-events: none;
-    backdrop-filter: blur(5px);
-}
-
-#answer-popup.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* --- General Button Styles (Arcade Look) --- */
-.action-button {
-    width: 100%;
-    padding: 18px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    border-radius: 14px;
-    border: none;
-    cursor: pointer;
+    padding: 16px;
+    font-size: 1rem;
+    transition: transform 0.1s;
     background-color: var(--primary-color);
-    color: var(--light-text);
-    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 15px;
-    /* 3D Bevel Effect */
-    box-shadow: 0 6px 0 var(--primary-color-hover), 0 10px 10px var(--shadow-color);
-    transform: translateY(0);
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.action-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 0 var(--primary-color-hover), 0 15px 20px var(--shadow-color);
-    filter: brightness(1.1);
-}
-
-.action-button:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 var(--primary-color-hover), 0 5px 5px var(--shadow-color);
+    color: white;
+    width: 100%;
+    margin-bottom: 0;
 }
 
 .action-button.secondary {
-    background-color: var(--card-bg);
-    color: var(--text-color);
+    background-color: transparent;
     border: 2px solid var(--border-color);
-    box-shadow: 0 6px 0 var(--border-color), 0 10px 10px var(--shadow-color);
-}
-
-.action-button.secondary:hover {
-    background-color: var(--bg-color);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 0 var(--border-color), 0 15px 20px var(--shadow-color);
     color: var(--text-color);
 }
 
-.action-button.secondary:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 var(--border-color), 0 5px 5px var(--shadow-color);
-}
-
-#leaderboard-toggle-buttons button.secondary:hover {
-    background-color: var(--bg-color);
-}
-
-/* --- Feedback Animations --- */
-.correct-answer { animation: correctAnswer 0.5s ease; }
-@keyframes correctAnswer { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-.shake {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    transform: translate3d(0, 0, 0);
-}
-
-@keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
-}
-
-/* --- Modal Styles --- */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: var(--modal-bg);
-    animation: fadeInModal 0.3s ease;
-    backdrop-filter: blur(5px);
-}
-
-.modal.is-active {
-    display: block;
-}
-
-@keyframes fadeInModal {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.modal-content {
-    background-color: var(--modal-content-bg);
+.choice-button {
+    flex: 1;
+    font-size: 1.3rem;
+    background: var(--card-bg);
     color: var(--text-color);
-    margin: 30vh auto; /* Center vertically better */
-    padding: 30px;
     border: 1px solid var(--border-color);
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    animation: slideInModal 0.3s ease-out;
+    /* 3D arcade effect */
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1);
 }
+.choice-button:active { transform: translateY(4px); box-shadow: none; }
 
-@keyframes slideInModal {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
+#higher-button { border-bottom: 4px solid var(--primary-color); }
+#lower-button { border-bottom: 4px solid var(--red-color); }
 
-.close-button {
-    color: var(--text-color);
-    opacity: 0.5;
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    transition: opacity 0.2s;
-}
+/* --- 6. GAME ELEMENTS (Juice) --- */
+#question-text { font-size: 1.2rem; text-align: center; margin: 15px 0; font-weight: 600; }
+#presented-value { font-size: 2.2rem; font-weight: 800; }
+.presented-value-container { background: var(--text-color); color: var(--bg-color); padding: 10px 25px; border-radius: 16px; }
 
-.close-button:hover {
-    opacity: 1;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* --- Floating Text (Juice) --- */
+/* Floating Text */
 .floating-text {
-    position: fixed;
-    font-size: 2rem;
+    position: absolute;
     font-weight: 900;
+    font-size: 2rem;
     pointer-events: none;
-    z-index: 2000;
-    animation: floatUp 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-    white-space: nowrap;
+    animation: floatUp 0.8s ease-out forwards;
+    z-index: 999;
+    text-shadow: 2px 2px 0px #fff;
 }
-
-.floating-text.positive {
-    color: var(--secondary-color); /* Gold */
-    -webkit-text-stroke: 1px #000;
-}
-
-.floating-text.negative {
-    color: var(--red-color);
-    -webkit-text-stroke: 1px #fff;
-}
+.floating-text.positive { color: var(--secondary-color); -webkit-text-stroke: 1px #000; }
+.floating-text.negative { color: var(--red-color); -webkit-text-stroke: 1px #fff; }
 
 @keyframes floatUp {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5) rotate(-10deg);
-    }
-    20% {
-        opacity: 1;
-        transform: translate(-50%, -150%) scale(1.2) rotate(5deg);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -300%) scale(1) rotate(0deg);
-    }
+    0% { opacity: 1; transform: translateY(0) scale(0.5); }
+    100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
 }
 
-/* Leaderboard & Highscore Input */
-#leaderboard-list {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-    text-align: left;
+/* Streak Badge */
+.streak-display {
+    background-color: #ffe5b4;
+    color: #d35400;
+    font-weight: 800;
+    padding: 8px 16px;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    animation: popIn 0.5s;
 }
-#leaderboard-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 8px;
-    font-weight: 600;
-    border: 1px solid var(--border-color);
-    transition: background-color 0.2s;
-}
-#leaderboard-list li:nth-child(odd) {
-    background-color: var(--bg-color);
-}
-#leaderboard-list li:hover {
-    border-color: var(--primary-color);
-}
-#leaderboard-list li span:last-child {
-    font-weight: 900;
-    color: var(--primary-color);
-}
+@keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
-#highscore-input-container {
-    margin-top: 25px;
-    width: 100%;
-}
-#player-initials {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    border: 2px solid var(--border-color);
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    transition: border-color 0.2s;
-}
-#player-initials:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-/* Ad Container Styles */
-#ad-container {
-    margin: 20px 0;
-    text-align: center;
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg-color);
-    border-radius: 12px;
-    padding: 10px;
-}
-
-#ad-container small {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--text-color);
-    opacity: 0.5;
-    font-size: 0.75rem;
-}
-
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-/* --- Toast Notifications --- */
-#toast-container {
-    position: fixed;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none;
-    width: 90%;
-    max-width: 350px;
-}
-
-.toast {
-    background-color: var(--toast-bg);
-    color: var(--light-text);
-    padding: 14px 24px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    font-size: 0.95rem;
-    font-weight: 500;
-    opacity: 0;
-    transform: translateY(-20px) scale(0.9);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-.toast.error {
-    background-color: var(--red-color);
-}
-
-.toast.success {
-    background-color: var(--primary-color);
-}
-
-.toast.info {
-    background-color: var(--blue-color);
-}
-
-/* --- Lives Display --- */
-#lives-display {
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    filter: drop-shadow(0 2px 4px var(--shadow-color));
-}
-
-.game-header {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px;
-    padding-right: 0; /* Removed explicit padding */
-    align-items: center;
-}
-
-/* --- SEO Text --- */
-/* Hide SEO text on Start Screen to save huge space (Google still reads hidden text) */
-.seo-text {
+/* Modals */
+.modal {
     display: none;
+    position: fixed; z-index: 2000; left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: var(--modal-bg);
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background-color: var(--modal-content-bg);
+    margin: 20vh auto;
+    padding: 30px;
+    width: 85%; max-width: 350px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    position: relative;
+}
+.close-button { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; opacity: 0.6; }
+
+/* Toasts */
+#toast-container { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 3000; width: 90%; text-align: center; pointer-events: none; }
+.toast { background: #333; color: white; padding: 12px 20px; border-radius: 50px; margin-bottom: 10px; opacity: 0; transition: opacity 0.3s; display: inline-block; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.toast.show { opacity: 1; }
+.toast.error { background: var(--red-color); }
+.toast.success { background: var(--primary-color); }
+
+/* --- 7. MOBILE OVERRIDE (Native App Feel) --- */
+@media (max-width: 767px) {
+    body { align-items: flex-start; padding: 0; }
+    #game-container {
+        width: 100%;
+        height: 100dvh;
+        max-height: none;
+        min-height: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 15px;
+    }
+    .logo h1 { font-size: 2.5rem; }
+    #card { margin: 5px 0; }
+    .choice-button { padding: 20px; } /* Larger touch targets */
 }
 
-/* --- Legal Links --- */
-.legal-links {
-    margin-top: 10px;
-    font-size: 0.8rem;
-}
-
-.legal-links a {
-    color: var(--text-color);
-    opacity: 0.6;
-    text-decoration: underline;
-}
-
-.legal-links a:hover {
-    opacity: 1;
-}
-
-/* --- Top Controls (Theme & Mute) - Removed as they are now in header --- */
-/* Kept empty or removed to ensure no ghost styles interfere */
+/* Hide SEO */
+.seo-text { display: none; }
