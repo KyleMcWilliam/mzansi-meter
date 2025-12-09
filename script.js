@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(questionTimer); // NEW: Stop the timer
         
         // NEW: Populate and show the correct answer
-        revealQuestionText.textContent = `Regarding: "${currentQuestion.question}"`;
+        revealQuestionText.textContent = `"${currentQuestion.question}"`;
         revealCorrectAnswer.textContent = formatValue(currentQuestion.value, currentQuestion.format);
         document.getElementById('final-score-title').textContent = reason;
 
@@ -538,7 +538,7 @@ function nextQuestion() {
         answerPopup.classList.add('show');
 
         // Wait, then proceed.
-        // We reduce this to 1000ms so the user can see the result,
+        // We reduce this to 600ms so the user can see the result,
         // then we fade it out AS the next question loads.
         setTimeout(() => {
             // Start fading out the popup
@@ -560,7 +560,7 @@ function nextQuestion() {
                     endGame(`Eish, you're out of lives!`);
                 }
             }
-        }, 1000);
+        }, 600);
     }
 
     function triggerConfetti() {
