@@ -98,8 +98,16 @@ body {
     min-height: 48px;
     margin-bottom: 20px;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+}
+
+.start-header {
+    justify-content: flex-end;
+}
+
+.game-header {
+    justify-content: flex-start;
+    gap: 15px;
 }
 
 .utility-group {
@@ -393,4 +401,30 @@ body.dark-mode .streak-display { color: var(--secondary); }
     .start-header { margin-bottom: 10px; }
     .streak-display { margin-bottom: 10px; }
     .menu-buttons { gap: 10px; }
+}
+
+/* --- ANSWER POPUP --- */
+#answer-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 80%;
+    padding: 24px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 50;
+    backdrop-filter: blur(4px);
+}
+
+#answer-popup.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
