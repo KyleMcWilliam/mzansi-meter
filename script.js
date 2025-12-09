@@ -537,9 +537,16 @@ function nextQuestion() {
         // Show the answer popup
         answerPopup.classList.add('show');
 
-        // Wait for 1.5 seconds, then proceed
+        // Wait, then proceed.
+        // We reduce this to 1000ms so the user can see the result,
+        // then we fade it out AS the next question loads.
         setTimeout(() => {
+            // Start fading out the popup
             answerPopup.classList.remove('show');
+
+            // Allow the popup fade-out to overlap with the card flip/reset
+            // The CSS transition is 0.3s. The card flip is 0.6s.
+
             cardFront.classList.remove('correct', 'incorrect');
             card.classList.remove('shake'); // Remove shake after animation
 
@@ -553,7 +560,7 @@ function nextQuestion() {
                     endGame(`Eish, you're out of lives!`);
                 }
             }
-        }, 1500);
+        }, 1000);
     }
 
     function triggerConfetti() {
