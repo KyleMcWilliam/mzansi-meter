@@ -102,6 +102,17 @@ body {
     align-items: center;
 }
 
+.utility-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.game-controls {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
 .icon-button-small {
     background: rgba(0,0,0,0.05);
     border: none;
@@ -373,6 +384,13 @@ body.dark-mode .streak-display { color: var(--secondary); }
         background: transparent;
     }
 
-    .logo h1 { font-size: 3rem; }
+    .logo h1 { font-size: 2.5rem; }
     .choice-button { padding: 22px; font-size: 1.5rem; }
+
+    /* Space saving for mobile */
+    .action-button { padding: 14px; }
+    .logo p { margin: 5px 0 15px; }
+    .start-header { margin-bottom: 10px; }
+    .streak-display { margin-bottom: 10px; }
+    .menu-buttons { gap: 10px; }
 }
