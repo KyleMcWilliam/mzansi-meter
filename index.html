@@ -107,12 +107,15 @@
         <!-- End Screen -->
         <div id="end-screen" class="screen">
             <h2 id="final-score-title">Eish, you got it wrong!</h2>
-            <div id="final-score-container">
-                <p>Final Score</p>
-                <div id="final-score">0</div>
-            </div>
-            <div id="graded-title-container">
-                <p>"<span id="graded-title">Certified Saffa</span>"</p>
+
+            <div class="result-card">
+                <div id="final-score-container">
+                    <p class="score-label">Final Score</p>
+                    <div id="final-score">0</div>
+                </div>
+                <div id="graded-title-container">
+                    <div id="graded-title">Certified Saffa</div>
+                </div>
             </div>
 
             <!-- Ad Container -->
@@ -132,11 +135,17 @@
 
              <!-- NEW: Answer Reveal Section -->
             <div id="answer-reveal-container">
+                <p class="reveal-label">Regarding:</p>
                 <p id="reveal-question-text"></p>
-                <p>The correct answer was: <span id="reveal-correct-answer"></span></p>
+                <div class="reveal-divider"></div>
+                <p class="reveal-label">The correct answer was:</p>
+                <p id="reveal-correct-answer"></p>
             </div>
-            <button id="share-button" class="action-button">Share Your Score</button>
-            <button id="restart-button" class="action-button secondary">Play Again</button>
+
+            <div class="end-buttons">
+                <button id="share-button" class="action-button">Share Your Score</button>
+                <button id="restart-button" class="action-button secondary">Play Again</button>
+            </div>
              <!-- NEW: High Score Input -->
             <div id="highscore-input-container" style="display: none;">
                 <p>Congrats! You're on the leaderboard!</p>
