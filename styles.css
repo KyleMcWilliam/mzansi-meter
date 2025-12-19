@@ -573,12 +573,14 @@ body.dark-mode .about-content h3 { color: var(--secondary); }
     }
 
     /* Specific overrides for layout density */
-    .logo h1 { font-size: 3rem; }
-    .choice-button { padding: 22px; font-size: 1.5rem; }
-    .action-button { padding: 16px; }
-    .logo p { margin: 5px 0 20px; }
-    .start-header { margin-bottom: 10px; }
-    .menu-buttons { gap: 12px; }
+    .logo h1 { font-size: 2.5rem; }
+    .choice-button { padding: 18px; font-size: 1.3rem; }
+    .action-button { padding: 14px; font-size: 0.95rem; }
+    .logo p { margin: 5px 0 15px; font-size: 1rem; }
+    .start-header { margin-bottom: 5px; min-height: 40px; }
+    .menu-buttons { gap: 10px; }
+    .high-score-display { margin-bottom: 15px; font-size: 0.85rem; }
+    .footer-note { margin-top: 15px; font-size: 0.75rem; }
 }
 
 /* --- ANSWER POPUP - IMPROVED --- */
