@@ -56,7 +56,7 @@ body {
 /* --- 2. THE GLASS CONTAINER --- */
 #game-container {
     width: 400px;
-    height: 700px;
+    height: 760px;
     max-height: 90vh;
     min-height: 550px;
 
@@ -103,6 +103,7 @@ body {
 
 .start-header {
     justify-content: flex-end;
+    margin-bottom: 10px; /* Reduced to pull content up */
 }
 
 .game-header {
@@ -343,7 +344,7 @@ body.dark-mode .presented-value-container { background: rgba(255,255,255,0.1); }
 .high-score-display {
     font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 body.dark-mode .streak-display { color: var(--secondary); }
 
