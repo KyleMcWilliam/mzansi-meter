@@ -8,15 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('start-button');
     const dailyChallengeButton = document.getElementById('daily-challenge-button');
     const leaderboardButton = document.getElementById('leaderboard-button');
+    const aboutButton = document.getElementById('about-button'); // NEW
+    const backFromAboutButton = document.getElementById('back-from-about-button'); // NEW
     const gameLeaderboardButton = document.getElementById('game-leaderboard-button');
     const backToStartButton = document.getElementById('back-to-start-button');
     const restartButton = document.getElementById('restart-button');
     const shareButton = document.getElementById('share-button');
     const higherButton = document.getElementById('higher-button');
     const lowerButton = document.getElementById('lower-button');
-    const howToPlayButton = document.getElementById('how-to-play-button');
-    const howToPlayModal = document.getElementById('how-to-play-modal');
-    const closeModalButton = howToPlayModal.querySelector('.close-button');
 
     const questionText = document.getElementById('question-text');
     const presentedValue = document.getElementById('presented-value');
@@ -180,20 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         submitScoreButton.addEventListener('click', submitScore);
 
-        // How to Play Modal Listeners
-        howToPlayButton.addEventListener('click', () => {
-            howToPlayModal.style.display = 'block';
-        });
-
-        closeModalButton.addEventListener('click', () => {
-            howToPlayModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == howToPlayModal) {
-                howToPlayModal.style.display = 'none';
-            }
-        });
+        // About Screen Listeners
+        if (aboutButton) {
+            aboutButton.addEventListener('click', () => {
+                previousScreen = 'start';
+                switchScreen('about');
+            });
+        }
+        if (backFromAboutButton) {
+            backFromAboutButton.addEventListener('click', () => switchScreen('start'));
+        }
 
         // --- Mute Logic (Handle both buttons) ---
         const muteBtns = [

@@ -42,17 +42,38 @@
                 <button id="start-button" class="action-button">Endless Mode</button>
                 <button id="daily-challenge-button" class="action-button">Daily Challenge</button>
                 <button id="leaderboard-button" class="action-button secondary">Leaderboard</button>
-                <button id="how-to-play-button" class="action-button secondary">How to Play</button>
+                <button id="about-button" class="action-button secondary">About & How to Play</button>
             </div>
 
             <div class="footer-note">
                 🇿🇦 How lekker is your local knowledge? 🇿🇦
                 <div class="legal-links">
-                    <a href="privacy.html" target="_blank">Privacy Policy</a>
+                    <a href="privacy.html" target="_blank">Privacy Policy</a> |
+                    <a href="terms.html" target="_blank">Terms of Service</a>
                 </div>
-                <div class="seo-text">
-                    <p>The Mzansi Meter is the ultimate South African guessing game! Test your knowledge of local prices, statistics, and fun facts. Can you guess if the real value is higher or lower? Play the Endless Mode for a high score or take on the Daily Challenge. It's free, fun, and purely South African.</p>
-                </div>
+            </div>
+        </div>
+
+        <!-- About Screen -->
+        <div id="about-screen" class="screen">
+            <div class="about-content">
+                <h2>About The Mzansi Meter</h2>
+                <p>Welcome to <strong>The Mzansi Meter</strong>, the ultimate South African guessing game!</p>
+
+                <h3>How to Play</h3>
+                <p>A question and a value will be displayed. You have to guess if the actual answer is <strong>Higher</strong> or <strong>Lower</strong> than the value shown.</p>
+                <p>Get as many right as you can in a row. One wrong guess and it's game over! Use your knowledge of local prices, stats, and South African culture to win.</p>
+
+                <h3>Why Play?</h3>
+                <p>Test your knowledge of everything South African - from the price of a loaf of bread to the population of our cities. It's free, fun, and purely local.</p>
+
+                <h3>Game Modes</h3>
+                <ul>
+                    <li><strong>Endless Mode:</strong> Play for the high score!</li>
+                    <li><strong>Daily Challenge:</strong> A set of 10 questions for everyone to compete on daily.</li>
+                </ul>
+
+                <button id="back-from-about-button" class="action-button">Back to Menu</button>
             </div>
         </div>
 
@@ -182,18 +203,17 @@
     <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore-compat.js"></script>
 
-    <!-- How to Play Modal -->
-    <div id="how-to-play-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>How to Play</h2>
-            <p>A question and a value will be displayed. You have to guess if the actual answer is <strong>Higher</strong> or <strong>Lower</strong> than the value shown.</p>
-            <p>Get as many right as you can in a row. One wrong guess and it's game over!</p>
-            <p>Good luck, boet!</p>
-        </div>
-    </div>
-
     <div id="toast-container"></div>
+
+    <!-- Desktop Footer -->
+    <footer id="desktop-footer">
+        <div class="legal-links">
+            <a href="privacy.html" target="_blank">Privacy Policy</a> |
+            <a href="terms.html" target="_blank">Terms of Service</a>
+        </div>
+        <p style="margin: 5px 0 0; font-size: 0.75rem; opacity: 0.7;">&copy; 2023 The Mzansi Meter</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
